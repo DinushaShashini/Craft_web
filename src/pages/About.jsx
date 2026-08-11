@@ -37,8 +37,8 @@ export default function About() {
           </div>
           <div className={styles.heroImages}>
             <img
-              src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80"
-              alt="Artisan crafting handmade items"
+              src="/images/products/ocean-round-resin-keychain.jpg"
+              alt="IMO Craft handmade ocean resin keychains"
               className={styles.heroImg}
             />
             <div className={styles.heroImageBadge}>
@@ -82,13 +82,13 @@ export default function About() {
             </div>
             <div className={styles.storyImages}>
               <img
-                src="https://images.unsplash.com/photo-1590548784585-643d2b9f2925?w=500&q=80"
-                alt="Craft process"
+                src="/images/products/ocean-letter-keychain.jpg"
+                alt="IMO Craft letter keychains handmade process"
                 className={styles.storyImg1}
               />
               <img
-                src="https://images.unsplash.com/photo-1563892584923-eb5da4cef9dc?w=400&q=80"
-                alt="Finished handmade products"
+                src="/images/products/glitter-letter-keychain.jpg"
+                alt="IMO Craft glitter letter keychains finished products"
                 className={styles.storyImg2}
               />
             </div>

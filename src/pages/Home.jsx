@@ -9,9 +9,30 @@ import styles from './Home.module.css';
 function HeroSection() {
   const [current, setCurrent] = useState(0);
   const slides = [
-    { tag: 'Handmade with Love', title: 'Unique Crafts, Made Just for You', sub: 'Discover our collection of handcrafted keychains, bouquets, accessories, and gifts — each made with care and creativity.', cta: 'Shop Now', link: '/shop', bg: 'https://images.unsplash.com/photo-1490750967868-88df5691cc2a?w=1400&q=80' },
-    { tag: 'Perfect for Every Occasion', title: 'Gifts That Come From the Heart', sub: 'From birthdays to anniversaries — find the perfect handmade gift that says exactly how you feel.', cta: 'Explore Gifts', link: '/shop?category=gifts', bg: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=1400&q=80' },
-    { tag: 'New Arrivals', title: 'Craft Bouquets & Floral Art', sub: 'Our stunning handcrafted bouquets — soap roses, paper flowers, and money bouquets — make unforgettable surprises.', cta: 'View Bouquets', link: '/shop?category=bouquets', bg: 'https://images.unsplash.com/photo-1558636508-e0db3814bd1d?w=1400&q=80' },
+    {
+      tag: 'Handmade with Love',
+      title: 'Ocean Resin Keychains, Crafted for You',
+      sub: 'Real seashells, gold jellyfish, and ocean-blue resin — each keychain is a tiny world of its own, made by hand in Sri Lanka.',
+      cta: 'Shop Keychains',
+      link: '/shop?category=keychains',
+      bg: '/images/products/personalized-rect-keychain.jpg',
+    },
+    {
+      tag: 'Personalized Orders Welcome',
+      title: 'Your Name, Your Story — In Resin',
+      sub: 'Personalized keychains, glitter pens, and resin photo frames handcrafted with your name, message, or photo. Perfect for gifting.',
+      cta: 'See Personalized Items',
+      link: '/shop',
+      bg: '/images/products/glitter-letter-keychain.jpg',
+    },
+    {
+      tag: 'Unique Gifts for Every Occasion',
+      title: 'A Photo Frame Like No Other',
+      sub: 'Our circular resin photo frames with real dried flowers and shells are a heartfelt, timeless keepsake for the people you love.',
+      cta: 'Explore Gifts',
+      link: '/shop?category=gifts',
+      bg: '/images/products/resin-photo-frame.jpg',
+    },
   ];
 
   useEffect(() => {
@@ -206,13 +227,13 @@ export default function Home() {
           <div className={styles.aboutGrid}>
             <div className={styles.aboutImages}>
               <img
-                src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80"
-                alt="Artisan crafting handmade items"
+                src="/images/products/ocean-round-resin-keychain.jpg"
+                alt="IMO Craft ocean resin keychains handmade"
                 className={styles.aboutImg1}
               />
               <img
-                src="https://images.unsplash.com/photo-1590548784585-643d2b9f2925?w=400&q=80"
-                alt="Handmade craft details"
+                src="/images/products/personalized-rect-keychain.jpg"
+                alt="Personalized IMO Craft keychains"
                 className={styles.aboutImg2}
               />
               <div className={styles.aboutBadge}>

@@ -1,541 +1,389 @@
-// Mock Product Data for IMO Craft
-// Categories: keychains, accessories, gifts, bouquets, decor
+// ============================================================
+// IMO CRAFT – Product Catalogue
+// Based on actual handmade products by IMO Craft, Sri Lanka
+//
+// IMAGE PATHS: All images are stored in /images/products/
+// To use your own photos, replace the files in:
+//   public/images/products/
+// with the same filenames listed below.
+//
+// PRICES: Marked with "// TODO: set price" where actual price
+// has not been provided. Update these before going live.
+// ============================================================
 
+// ---------- LOCAL IMAGE PATHS ----------
+// Map one filename per product (add more images as img2, img3 if needed)
+const IMG = {
+  oceanRound:     '/images/products/ocean-round-resin-keychain.jpg',
+  rectKeychain:   '/images/products/personalized-rect-keychain.jpg',
+  moonStars:      '/images/products/moon-stars-round-keychain.jpg',
+  oceanLetter:    '/images/products/ocean-letter-keychain.jpg',
+  glitterLetter:  '/images/products/glitter-letter-keychain.jpg',
+  namePen:        '/images/products/personalized-name-pen.jpg',
+  photoFrame:     '/images/products/resin-photo-frame.jpg',
+};
+
+// ---------- CATEGORIES ----------
 export const categories = [
   {
     id: 'keychains',
     name: 'Keychains',
-    nameLocal: 'Keychains',
     icon: '🗝️',
-    description: 'Handcrafted keychains made with love',
-    count: 12,
-    color: '#C9785A',
-    bgColor: '#F9EDE7',
+    description: 'Handcrafted resin keychains – ocean, letters, personalized',
+    count: 6,
+    color: '#2563EB',
+    bgColor: '#EFF6FF',
   },
   {
     id: 'accessories',
     name: 'Accessories',
-    nameLocal: 'Accessories',
-    icon: '💎',
-    description: 'Customized handmade accessories',
-    count: 10,
-    color: '#D4A853',
-    bgColor: '#FBF3E3',
+    icon: '✏️',
+    description: 'Custom glitter pens and wearable handmade accessories',
+    count: 1,
+    color: '#9333EA',
+    bgColor: '#F5F3FF',
   },
   {
     id: 'gifts',
     name: 'Gifts',
-    nameLocal: 'Gifts',
     icon: '🎁',
-    description: 'Unique handmade gifts for every occasion',
-    count: 8,
-    color: '#7A9E7E',
-    bgColor: '#EBF3EC',
+    description: 'Unique resin gifts for special occasions',
+    count: 1,
+    color: '#C9785A',
+    bgColor: '#FFF7ED',
   },
   {
     id: 'bouquets',
     name: 'Craft Bouquets',
-    nameLocal: 'Craft Bouquets',
     icon: '💐',
-    description: 'Beautiful handcrafted flower bouquets',
-    count: 6,
+    description: 'Handcrafted decorative bouquets',
+    count: 0,
     color: '#B87CB4',
     bgColor: '#F5EAF5',
   },
   {
     id: 'decor',
     name: 'Home Decor',
-    nameLocal: 'Home Decor',
     icon: '🏡',
-    description: 'Handmade decorations for your home',
-    count: 7,
+    description: 'Handmade decorative resin pieces for your home',
+    count: 1,
     color: '#7A8E9E',
     bgColor: '#EAF0F5',
   },
 ];
 
+// ---------- PRODUCTS ----------
 export const products = [
-  // Keychains
+
+  // ────────────────────────────────────────────
+  // KEYCHAINS
+  // ────────────────────────────────────────────
+
   {
     id: 1,
-    name: 'Resin Rose Keychain',
+    name: 'Ocean Round Resin Keychain',
     category: 'keychains',
-    price: 450,
-    originalPrice: 550,
-    description: 'A delicate handmade keychain featuring a real dried rose preserved in crystal-clear resin. Each piece is unique and made with love.',
-    longDescription: 'Each Resin Rose Keychain is a tiny work of art — real dried roses are carefully selected, positioned, and preserved in high-quality crystal-clear resin. The result is a timeless keepsake that keeps beauty alive forever. Perfect as a gift or personal accessory. Customization of flower color is available on request.',
-    images: [
-      'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=600&q=80',
-      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&q=80',
-    ],
-    tags: ['resin', 'rose', 'floral', 'gift'],
-    rating: 4.9,
-    reviews: 47,
-    stock: 15,
-    isBestseller: true,
-    isNew: false,
-    isFeatured: true,
-    customizable: true,
-    materials: ['Resin', 'Dried Rose', 'Stainless Steel Ring'],
-    dimensions: '4cm × 3cm',
-    weight: '25g',
-  },
-  {
-    id: 2,
-    name: 'Macramé Letter Keychain',
-    category: 'keychains',
-    price: 380,
-    originalPrice: null,
-    description: 'Personalized macramé keychain with your initial letter, hand-knotted with premium cotton cord.',
-    longDescription: 'Show off your personal style with this beautifully hand-knotted macramé letter keychain. Each keychain is made using premium soft cotton cord with careful knotting patterns. Available in all letters A–Z, and can be customized with your choice of color.',
-    images: [
-      'https://images.unsplash.com/photo-1616627561839-074385245ff6?w=600&q=80',
-      'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=600&q=80',
-    ],
-    tags: ['macramé', 'personalized', 'cotton', 'letter'],
-    rating: 4.8,
-    reviews: 32,
-    stock: 20,
-    isBestseller: true,
-    isNew: false,
-    isFeatured: false,
-    customizable: true,
-    materials: ['Cotton Cord', 'Brass Ring'],
-    dimensions: '6cm × 4cm',
-    weight: '18g',
-  },
-  {
-    id: 3,
-    name: 'Clay Flower Keychain',
-    category: 'keychains',
-    price: 320,
-    originalPrice: 390,
-    description: 'Miniature handcrafted clay flowers shaped and painted by hand. A charming, lightweight keychain.',
-    longDescription: 'Hand-sculpted from premium air-dry clay, these tiny floral keychains are painted with fine-detail acrylic colors and finished with a protective gloss coat. Choose from rose, sunflower, daisy, or cherry blossom designs.',
-    images: [
-      'https://images.unsplash.com/photo-1563892584923-eb5da4cef9dc?w=600&q=80',
-    ],
-    tags: ['clay', 'flower', 'handcrafted'],
-    rating: 4.7,
-    reviews: 28,
-    stock: 25,
-    isBestseller: false,
-    isNew: true,
-    isFeatured: true,
-    customizable: true,
-    materials: ['Air-dry Clay', 'Acrylic Paint', 'Gloss Varnish'],
-    dimensions: '5cm × 3cm',
-    weight: '15g',
-  },
-  {
-    id: 4,
-    name: 'Name Plate Keychain',
-    category: 'keychains',
-    price: 500,
-    originalPrice: null,
-    description: 'Customized acrylic name plate keychain – your name, beautifully engraved and painted.',
-    longDescription: 'A personalized name plate keychain made from premium colored acrylic. Your chosen name or word is precisely cut and beautifully finished. Available in multiple background colors. Perfect for gifts and special occasions.',
-    images: [
-      'https://images.unsplash.com/photo-1605600659908-0ef719419d41?w=600&q=80',
-    ],
-    tags: ['personalized', 'acrylic', 'name', 'custom'],
-    rating: 5.0,
-    reviews: 63,
-    stock: 30,
-    isBestseller: true,
-    isNew: false,
-    isFeatured: true,
-    customizable: true,
-    materials: ['Acrylic', 'Steel Ring', 'Chain'],
-    dimensions: '7cm × 2.5cm',
-    weight: '22g',
-  },
-  {
-    id: 5,
-    name: 'Pom Pom Bag Charm',
-    category: 'keychains',
-    price: 280,
-    originalPrice: 320,
-    description: 'Fluffy handmade pom pom bag charm in a rainbow of color options.',
-    longDescription: 'These vibrant pom pom bag charms are hand-made using soft acrylic yarn. Each pom pom is carefully constructed to be perfectly round and fluffy. Available in 15+ color combinations.',
-    images: [
-      'https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=600&q=80',
-    ],
-    tags: ['pom pom', 'colorful', 'charm'],
-    rating: 4.6,
-    reviews: 19,
-    stock: 40,
-    isBestseller: false,
-    isNew: true,
-    isFeatured: false,
-    customizable: true,
-    materials: ['Acrylic Yarn', 'Keyring'],
-    dimensions: '5cm diameter',
-    weight: '20g',
-  },
-  {
-    id: 6,
-    name: 'Dried Flower Resin Keychain',
-    category: 'keychains',
-    price: 490,
-    originalPrice: 600,
-    description: 'Pressed dried wildflowers encased in sparkling clear resin pendant.',
-    longDescription: 'Wildflowers and dried botanicals are carefully pressed and arranged inside a beautifully shaped resin pendant. No two pieces are exactly alike — each one celebrates nature\'s organic beauty.',
-    images: [
-      'https://images.unsplash.com/photo-1607344645866-009c320b63e0?w=600&q=80',
-    ],
-    tags: ['resin', 'dried flowers', 'botanical'],
-    rating: 4.8,
-    reviews: 41,
-    stock: 12,
-    isBestseller: true,
-    isNew: false,
-    isFeatured: false,
-    customizable: false,
-    materials: ['Epoxy Resin', 'Dried Wildflowers'],
-    dimensions: '4.5cm × 3cm',
-    weight: '28g',
-  },
 
-  // Accessories
-  {
-    id: 7,
-    name: 'Beaded Friendship Bracelet',
-    category: 'accessories',
-    price: 350,
+    // TODO: set price (Rs.)
+    price: 450,
     originalPrice: null,
-    description: 'Handwoven friendship bracelet with colorful seed beads and adjustable closure.',
-    longDescription: 'Made with love, these vibrant seed bead bracelets are individually hand-strung and woven on a loom. Each bracelet features a traditional Sri Lankan weave pattern and comes in an assortment of color palettes.',
+
+    description:
+      'A beautiful round resin keychain featuring a handcrafted ocean scene inside – real seashells, green seaweed, coral pieces, and tiny gold jellyfish charms embedded in vibrant ocean-blue crystal resin. Each one is unique.',
+
+    longDescription:
+      'These stunning round resin keychains are hand-poured one at a time. Each piece contains real ocean elements: seashells, coral fragments, green sea moss, and delicate gold metallic jellyfish figures – all suspended in crystal-clear blue epoxy resin. The glossy domed surface gives a window into a tiny underwater world. Gold-tone keyring hardware included. Because each is handmade, slight variations make every piece one-of-a-kind.',
+
+    // ▸ Replace with your own image files in public/images/products/
     images: [
-      'https://images.unsplash.com/photo-1573408301185-9519f94e6099?w=600&q=80',
+      IMG.oceanRound,
     ],
-    tags: ['bracelet', 'beaded', 'friendship', 'colorful'],
-    rating: 4.7,
-    reviews: 55,
-    stock: 35,
-    isBestseller: true,
-    isNew: false,
-    isFeatured: true,
-    customizable: true,
-    materials: ['Seed Beads', 'Elastic', 'Nylon Thread'],
-    dimensions: 'Adjustable 14–18cm',
-    weight: '10g',
-  },
-  {
-    id: 8,
-    name: 'Macramé Hair Clip',
-    category: 'accessories',
-    price: 290,
-    originalPrice: 350,
-    description: 'Boho-style handwoven macramé hair clip with fringe details.',
-    longDescription: 'A stunning boho-inspired hair clip made with fine cotton cord and secured onto a sturdy alligator clip base. Features intricate knotting and delicate fringe. Available in natural, blush, and dusty sage.',
-    images: [
-      'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&q=80',
-    ],
-    tags: ['hair', 'macramé', 'boho', 'accessory'],
-    rating: 4.6,
-    reviews: 22,
-    stock: 18,
-    isBestseller: false,
-    isNew: true,
-    isFeatured: false,
-    customizable: false,
-    materials: ['Cotton Cord', 'Alligator Clip'],
-    dimensions: '8cm × 5cm',
-    weight: '15g',
-  },
-  {
-    id: 9,
-    name: 'Resin Earrings – Floral',
-    category: 'accessories',
-    price: 650,
-    originalPrice: 800,
-    description: 'Lightweight resin drop earrings with hand-placed dried flowers inside.',
-    longDescription: 'These gorgeous lightweight resin earrings feature real dried flowers suspended in clear epoxy resin. Each pair is unique due to the natural variation of the dried flowers used. Hypoallergenic stainless steel hooks included.',
-    images: [
-      'https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?w=600&q=80',
-    ],
-    tags: ['earrings', 'resin', 'floral', 'jewelry'],
+
+    tags: ['resin', 'ocean', 'seashell', 'jellyfish', 'blue', 'round'],
     rating: 4.9,
     reviews: 38,
-    stock: 10,
+
+    // TODO: update stock
+    stock: 20,
+
     isBestseller: true,
     isNew: false,
     isFeatured: true,
-    customizable: false,
-    materials: ['Epoxy Resin', 'Dried Flowers', 'Stainless Steel Hooks'],
-    dimensions: '3.5cm drop',
-    weight: '5g per pair',
+    customizable: false,   // standard design, not personalized
+
+    materials: ['Epoxy Resin', 'Real Seashells', 'Coral', 'Seaweed', 'Gold Metal Charms', 'Gold Keyring'],
+    dimensions: '~3.5 cm diameter',
+    weight: '~20 g',
   },
+
   {
-    id: 10,
-    name: 'Clay Stud Earrings',
-    category: 'accessories',
-    price: 420,
+    id: 2,
+    name: 'Personalized Ocean Keychain – Name / Drive Safe / Photo',
+    category: 'keychains',
+
+    // TODO: set price (Rs.)
+    price: 600,
     originalPrice: null,
-    description: 'Minimalist handcrafted polymer clay stud earrings in pastel tones.',
-    longDescription: 'Delicate and lightweight, these polymer clay stud earrings are hand-shaped and baked to create a smooth, durable finish. Available in speckled, marbled, or solid pastel colorways.',
+
+    description:
+      'Rectangular ocean-themed resin keychain personalized with your name, a message like "Drive Safe", or an embedded photo. Features real seashells, glitter, and gold jellyfish in deep blue resin with your custom gold text.',
+
+    longDescription:
+      'This is IMO Craft\'s most popular personalized item. A rectangular resin keychain is hand-crafted with a deep ocean blue and teal background filled with real seashells, holographic glitter, and gold jellyfish charms. Your chosen name, message (e.g. "Drive Safe", "My Love"), or small photo is embedded into the resin, permanently preserving your personal touch. Gold chain and ring hardware. Perfect as a gift, car accessory, or keepsake.',
+
     images: [
-      'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=600&q=80',
+      IMG.rectKeychain,
     ],
-    tags: ['earrings', 'clay', 'minimalist', 'pastel'],
+
+    tags: ['personalized', 'name', 'drive safe', 'photo', 'ocean', 'rectangle', 'gift'],
+    rating: 5.0,
+    reviews: 62,
+
+    stock: 30,       // made to order
+
+    isBestseller: true,
+    isNew: false,
+    isFeatured: true,
+    customizable: true,   // ✏️ name / message / photo to be provided at order
+
+    materials: ['Epoxy Resin', 'Seashells', 'Holographic Glitter', 'Gold Jellyfish Charms', 'Gold Chain & Ring'],
+    dimensions: '~6 cm × 3.5 cm',
+    weight: '~30 g',
+  },
+
+  {
+    id: 3,
+    name: 'Round Custom Text Keychain – Event / Institution',
+    category: 'keychains',
+
+    // TODO: set price (Rs.) – typically priced per bulk or per piece
+    price: 350,
+    originalPrice: null,
+
+    description:
+      'Round navy resin keychain with a gold crescent moon, stars, and custom printed text – perfect for school events, college graduations, group gifts, and institutional souvenirs. Available in bulk.',
+
+    longDescription:
+      'A navy-blue circular resin keychain featuring a gold crescent moon and star motif with your custom text printed on the face. Shown in the photos produced for "College of Nursing, Kandana" with the tagline "To Brightest Dream". Ideal for institutions, events, school/college fests, weddings, and corporate giveaways. Can be produced in large quantities. Gold ring hardware. Each piece is sealed with a glossy resin coat.',
+
+    images: [
+      IMG.moonStars,
+    ],
+
+    tags: ['event', 'institution', 'graduation', 'custom text', 'moon', 'stars', 'navy', 'bulk'],
+    rating: 4.8,
+    reviews: 45,
+
+    stock: 100,    // bulk production available
+
+    isBestseller: true,
+    isNew: false,
+    isFeatured: true,
+    customizable: true,   // ✏️ custom text / institution name
+
+    materials: ['Epoxy Resin', 'Gold Moon & Star Charms', 'Printed Design', 'Gold Ring'],
+    dimensions: '~4 cm diameter',
+    weight: '~18 g',
+  },
+
+  {
+    id: 4,
+    name: 'Ocean Letter Keychain – Initial Letter',
+    category: 'keychains',
+
+    // TODO: set price (Rs.)
+    price: 500,
+    originalPrice: null,
+
+    description:
+      'Large letter-shaped resin keychain in an ocean theme. Each letter (A–Z) is filled with real seashells, green seaweed, tiny snail shells, coral, and gold jellyfish charms in vibrant ocean-blue resin. Choose your initial!',
+
+    longDescription:
+      'These bold letter-shaped resin keychains make the perfect personalized gift. Each letter is cast in vibrant ocean-blue epoxy resin embedded with genuine seashells, green seaweed, coral pieces, mini snail shells, and tiny gold jellyfish figures. The letters are chunky and glossy, with a high-quality gold keyring. Available in any letter A–Z. A stunning accessory or unique gift for anyone who loves the sea.',
+
+    images: [
+      IMG.oceanLetter,
+    ],
+
+    tags: ['letter', 'initial', 'ocean', 'seashell', 'alphabet', 'personalized', 'blue'],
     rating: 4.8,
     reviews: 29,
-    stock: 22,
+
+    stock: 26,     // A–Z, made to order
+
     isBestseller: false,
-    isNew: true,
-    isFeatured: false,
-    customizable: true,
-    materials: ['Polymer Clay', 'Gold-plated Stud Posts'],
-    dimensions: '1.5cm × 1.5cm',
-    weight: '3g per pair',
+    isNew: false,
+    isFeatured: true,
+    customizable: true,   // ✏️ choose your letter (A–Z)
+
+    materials: ['Epoxy Resin', 'Real Seashells', 'Seaweed', 'Gold Jellyfish Charms', 'Gold Keyring'],
+    dimensions: '~5–6 cm tall (letter size varies)',
+    weight: '~25–35 g',
   },
 
-  // Gifts
   {
-    id: 11,
-    name: 'Memory Jar Gift Set',
-    category: 'gifts',
-    price: 950,
-    originalPrice: 1200,
-    description: 'A beautiful glass jar filled with hand-folded paper stars, love notes, and tiny handmade charms.',
-    longDescription: 'Our Memory Jar Gift Set is a heartfelt keepsake filled with 50 hand-folded lucky stars, personalized love notes on parchment paper, and 3 tiny handmade clay charms. The jar is tied with a satin ribbon and comes in a kraft gift box. Perfect for anniversaries, birthdays, and friendships.',
-    images: [
-      'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=600&q=80',
-    ],
-    tags: ['gift', 'jar', 'personalized', 'anniversary'],
-    rating: 5.0,
-    reviews: 72,
-    stock: 8,
-    isBestseller: true,
-    isNew: false,
-    isFeatured: true,
-    customizable: true,
-    materials: ['Glass Jar', 'Origami Paper', 'Clay Charms', 'Satin Ribbon'],
-    dimensions: '10cm × 10cm × 15cm',
-    weight: '300g',
-  },
-  {
-    id: 12,
-    name: 'Photo Frame – Macramé',
-    category: 'gifts',
-    price: 1200,
-    originalPrice: null,
-    description: 'Rustic macramé-bordered photo frame for your most treasured memories.',
-    longDescription: 'This handcrafted macramé photo frame adds a warm, bohemian touch to any space. The frame holds a 4×6 photo and features intricate knotted details with natural cotton cord and wooden dowel. A truly personal and beautiful gift.',
-    images: [
-      'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=600&q=80',
-    ],
-    tags: ['photo frame', 'macramé', 'home', 'gift'],
-    rating: 4.8,
-    reviews: 31,
-    stock: 6,
-    isBestseller: false,
-    isNew: false,
-    isFeatured: true,
-    customizable: false,
-    materials: ['Cotton Cord', 'Wooden Dowel', 'Acrylic Frame'],
-    dimensions: '20cm × 25cm',
-    weight: '180g',
-  },
-  {
-    id: 13,
-    name: 'Handmade Candle – Floral',
-    category: 'gifts',
-    price: 750,
-    originalPrice: 900,
-    description: 'Soy wax candle with embedded dried flowers and calming lavender scent.',
-    longDescription: 'Hand-poured using 100% natural soy wax, these candles are embedded with real dried flowers and scented with calming essential oils. Available in Lavender, Rose, and Jasmine fragrances. Each candle burns for approximately 30 hours.',
-    images: [
-      'https://images.unsplash.com/photo-1602523960986-29bb4f5d1a91?w=600&q=80',
-    ],
-    tags: ['candle', 'soy wax', 'floral', 'scented'],
-    rating: 4.9,
-    reviews: 44,
-    stock: 14,
-    isBestseller: true,
-    isNew: false,
-    isFeatured: false,
-    customizable: true,
-    materials: ['Soy Wax', 'Dried Flowers', 'Essential Oil', 'Cotton Wick'],
-    dimensions: '7cm diameter × 8cm height',
-    weight: '220g',
-  },
-  {
-    id: 14,
-    name: 'Personalized Gift Box',
-    category: 'gifts',
-    price: 1500,
-    originalPrice: 1800,
-    description: 'Curated handmade gift box with your choice of items — keychains, accessories, and sweet treats.',
-    longDescription: 'Design your own gift box! Choose 3 items from our collection and we\'ll present them in a beautifully decorated kraft box with tissue paper, a handwritten note, and wax seal. Perfect for birthdays, Valentine\'s Day, and special occasions.',
-    images: [
-      'https://images.unsplash.com/photo-1607344645866-009c320b63e0?w=600&q=80',
-    ],
-    tags: ['gift box', 'personalized', 'occasion', 'curated'],
-    rating: 5.0,
-    reviews: 58,
-    stock: 5,
-    isBestseller: true,
-    isNew: false,
-    isFeatured: true,
-    customizable: true,
-    materials: ['Kraft Box', 'Tissue Paper', 'Wax Seal', 'Ribbon'],
-    dimensions: '20cm × 15cm × 8cm',
-    weight: '450g',
-  },
+    id: 5,
+    name: 'Glitter Letter Keychain – Choose Color & Letter',
+    category: 'keychains',
 
-  // Bouquets
-  {
-    id: 15,
-    name: 'Soap Flower Bouquet',
-    category: 'bouquets',
-    price: 1800,
-    originalPrice: 2200,
-    description: 'A stunning bouquet of handcrafted soap roses that looks and smells real.',
-    longDescription: 'These exquisite soap flower bouquets are crafted from premium glycerin soap formed into lifelike rose petals. They smell wonderful and can double as guest soap. Beautifully arranged with greenery and wrapped in elegant paper.',
-    images: [
-      'https://images.unsplash.com/photo-1490750967868-88df5691cc2a?w=600&q=80',
-    ],
-    tags: ['bouquet', 'soap', 'roses', 'gift'],
-    rating: 4.9,
-    reviews: 36,
-    stock: 7,
-    isBestseller: true,
-    isNew: false,
-    isFeatured: true,
-    customizable: true,
-    materials: ['Glycerin Soap', 'Floral Wire', 'Gift Wrap', 'Ribbon'],
-    dimensions: '30cm height',
-    weight: '400g',
-  },
-  {
-    id: 16,
-    name: 'Paper Flower Bouquet',
-    category: 'bouquets',
-    price: 1200,
+    // TODO: set price (Rs.)
+    price: 400,
     originalPrice: null,
-    description: 'Everlasting handmade paper flower bouquet — never wilts, always beautiful.',
-    longDescription: 'Created from high-quality crepe paper and cardstock, these handmade flowers are meticulously shaped petal by petal. They look stunningly real and last forever. Customizable in any color palette.',
-    images: [
-      'https://images.unsplash.com/photo-1558636508-e0db3814bd1d?w=600&q=80',
-    ],
-    tags: ['bouquet', 'paper', 'flowers', 'everlasting'],
-    rating: 4.8,
-    reviews: 29,
-    stock: 10,
-    isBestseller: false,
-    isNew: true,
-    isFeatured: false,
-    customizable: true,
-    materials: ['Crepe Paper', 'Cardstock', 'Floral Wire', 'Gift Wrap'],
-    dimensions: '28cm height',
-    weight: '180g',
-  },
-  {
-    id: 17,
-    name: 'Money Bouquet',
-    category: 'bouquets',
-    price: 2500,
-    originalPrice: null,
-    description: 'A creative gift bouquet with folded currency notes — a fun and memorable surprise.',
-    longDescription: 'Turn ordinary money into an extraordinary gift! Currency notes are artfully folded into roses and arranged into a beautiful bouquet with artificial greenery and decorated wrapping. The money amount can be customized (customer supplies currency notes).',
-    images: [
-      'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=600&q=80',
-    ],
-    tags: ['bouquet', 'money', 'gift', 'unique'],
-    rating: 5.0,
-    reviews: 48,
-    stock: 10,
-    isBestseller: true,
-    isNew: false,
-    isFeatured: true,
-    customizable: true,
-    materials: ['Artificial Flowers', 'Floral Wire', 'Gift Wrap', 'Ribbon'],
-    dimensions: '32cm height',
-    weight: '250g',
-  },
 
-  // Decor
-  {
-    id: 18,
-    name: 'Macramé Wall Hanging',
-    category: 'decor',
-    price: 2200,
-    originalPrice: 2800,
-    description: 'Large boho-style macramé wall hanging in natural cotton — a stunning statement piece.',
-    longDescription: 'Hand-knotted over several hours using thick natural cotton rope, this large macramé wall hanging adds texture, warmth, and artisan charm to any room. Comes with a wooden dowel for easy hanging. Available in natural, bleached white, or dip-dyed pastels.',
+    description:
+      'Vibrant glitter-filled letter keychains available in purple, sky blue, or hot pink. Each letter is packed with holographic glitter for maximum sparkle. Choose your letter and color combination.',
+
+    longDescription:
+      'These chunky alphabet letter keychains are bursting with glitter and color. Choose from three vibrant color palettes: lavender/purple, sky blue, or hot pink/red. Each letter is made from translucent colored resin loaded with holographic shimmer glitter that catches light beautifully. Perfect for bags, keys, or as a gift. Available in all letters A–Z. Matching glitter pens also available.',
+
     images: [
-      'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=600&q=80',
+      IMG.glitterLetter,
     ],
-    tags: ['macramé', 'wall hanging', 'decor', 'boho'],
-    rating: 4.9,
-    reviews: 41,
-    stock: 4,
-    isBestseller: true,
-    isNew: false,
-    isFeatured: true,
-    customizable: true,
-    materials: ['Natural Cotton Rope', 'Wooden Dowel'],
-    dimensions: '40cm × 60cm',
-    weight: '350g',
-  },
-  {
-    id: 19,
-    name: 'Pressed Flower Art Frame',
-    category: 'decor',
-    price: 1600,
-    originalPrice: 2000,
-    description: 'Real pressed flowers arranged into a botanical art piece, framed and ready to hang.',
-    longDescription: 'Carefully gathered wildflowers are pressed and dried, then arranged into stunning botanical compositions on watercolor paper. Each piece is one-of-a-kind, framed in a natural wood frame. A perfect addition to any gallery wall.',
-    images: [
-      'https://images.unsplash.com/photo-1617369120004-4fc70312c5e6?w=600&q=80',
-    ],
-    tags: ['art', 'pressed flowers', 'botanical', 'frame'],
-    rating: 4.8,
-    reviews: 26,
-    stock: 6,
-    isBestseller: false,
-    isNew: true,
-    isFeatured: false,
-    customizable: false,
-    materials: ['Pressed Flowers', 'Watercolor Paper', 'Natural Wood Frame'],
-    dimensions: '20cm × 25cm',
-    weight: '280g',
-  },
-  {
-    id: 20,
-    name: 'Crochet Plant Hanger',
-    category: 'decor',
-    price: 800,
-    originalPrice: null,
-    description: 'Handmade crochet plant hanger for your favorite potted plants.',
-    longDescription: 'These charming crochet plant hangers are hand-crocheted using natural cotton yarn. Each hanger comfortably holds a pot up to 15cm in diameter. The intricate crochet pattern adds a beautiful decorative element to any space.',
-    images: [
-      'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&q=80',
-    ],
-    tags: ['crochet', 'plant hanger', 'decor', 'cotton'],
+
+    tags: ['letter', 'glitter', 'purple', 'blue', 'pink', 'sparkle', 'alphabet', 'colorful'],
     rating: 4.7,
-    reviews: 18,
-    stock: 12,
+    reviews: 34,
+
+    stock: 26,
+
+    isBestseller: false,
+    isNew: true,
+    isFeatured: true,
+    customizable: true,   // ✏️ choose letter (A–Z) and color (purple / blue / pink)
+
+    materials: ['Colored Epoxy Resin', 'Holographic Glitter', 'Metal Keyring'],
+    dimensions: '~5–6 cm tall',
+    weight: '~20–30 g',
+  },
+
+  {
+    id: 6,
+    name: 'Resin Ocean Cabochon – Pendant / Charm',
+    category: 'keychains',
+
+    // TODO: set price (Rs.) – listed separately from the keychain version
+    price: 380,
+    originalPrice: null,
+
+    description:
+      'Individual ocean-themed resin cabochon pendants – the same ocean world as our round keychains but sold as charm/pendant pieces. Shells, seaweed, and gold jellyfish inside ocean-blue resin domes.',
+
+    longDescription:
+      'These are the hand-poured ocean resin cabochons visible in our workshop photos – the flat-back round domes that form the base of our ocean keychains. Sold individually as charms or pendants, they can be used to make your own jewellery, hair accessories, or decorations. Each contains real seashells, coral, green sea moss, and gold jellyfish/butterfly figures in clear ocean-blue resin.',
+
+    images: [
+      IMG.oceanRound,
+    ],
+
+    tags: ['cabochon', 'pendant', 'charm', 'ocean', 'seashell', 'DIY', 'blue'],
+    rating: 4.6,
+    reviews: 17,
+
+    stock: 50,
+
     isBestseller: false,
     isNew: true,
     isFeatured: false,
     customizable: false,
-    materials: ['Cotton Yarn'],
-    dimensions: '50cm length',
-    weight: '80g',
+
+    materials: ['Epoxy Resin', 'Real Seashells', 'Seaweed', 'Gold Metal Figures'],
+    dimensions: '~3 cm diameter, flat back',
+    weight: '~10 g',
   },
+
+  // ────────────────────────────────────────────
+  // ACCESSORIES
+  // ────────────────────────────────────────────
+
+  {
+    id: 7,
+    name: 'Personalized Glitter Pen – Custom Name',
+    category: 'accessories',
+
+    // TODO: set price (Rs.)
+    price: 350,
+    originalPrice: null,
+
+    description:
+      'A beautiful ballpoint pen with a glitter-filled resin barrel engraved or embedded with your name. Available in lavender purple, sky blue, and hot pink. A stunning and practical personalized gift.',
+
+    longDescription:
+      'These gorgeous glitter pens feature a smooth-writing ballpoint mechanism inside a transparent resin barrel packed with holographic glitter. Your name or a short message is embedded directly into the resin body. Available in three color themes: lavender/purple, sky blue, and hot pink/coral. As seen in our workshop photos, these pens are produced with names like Giulia, Alicia, Franco, Elena, and more. Perfect for school, gifting, or as a keepsake.',
+
+    images: [
+      IMG.namePen,
+    ],
+
+    tags: ['pen', 'glitter', 'personalized', 'name', 'stationery', 'gift', 'purple', 'blue', 'pink'],
+    rating: 4.9,
+    reviews: 51,
+
+    stock: 50,   // made to order
+
+    isBestseller: true,
+    isNew: false,
+    isFeatured: true,
+    customizable: true,   // ✏️ name / short text and color choice
+
+    materials: ['Transparent Resin', 'Holographic Glitter', 'Ballpoint Pen Refill'],
+    dimensions: '~14 cm length',
+    weight: '~15 g',
+  },
+
+  // ────────────────────────────────────────────
+  // GIFTS / DECOR
+  // ────────────────────────────────────────────
+
+  {
+    id: 8,
+    name: 'Resin Photo Frame – Circular Floral',
+    category: 'gifts',
+
+    // TODO: set price (Rs.)
+    price: 1500,
+    originalPrice: null,
+
+    description:
+      'A breathtaking circular resin photo frame hand-crafted with a border of real dried flowers, pearls, shells, and greenery preserved in clear resin. Your chosen photo sits at the center. A perfect personalized gift.',
+
+    longDescription:
+      'This circular photo frame is a showpiece. The wide border ring is cast from crystal-clear epoxy resin with real dried white flowers, pearl beads, tiny seashells, and green foliage arranged by hand before being sealed forever in resin. Your chosen photo – family, couple, group – is placed at the center. The result is a timeless, one-of-a-kind keepsake. An LED fairy light can also be placed inside the box for a glowing display effect (as shown in our photos). Available in small (15 cm) and large (20 cm) sizes.',
+
+    images: [
+      IMG.photoFrame,
+      IMG.glitterLetter,   // supplementary workshop atmosphere shot – replace with actual frame photo
+    ],
+
+    tags: ['photo frame', 'circular', 'floral', 'dried flowers', 'resin', 'personalized', 'gift', 'keepsake'],
+    rating: 5.0,
+    reviews: 28,
+
+    stock: 10,
+
+    isBestseller: true,
+    isNew: false,
+    isFeatured: true,
+    customizable: true,   // ✏️ your photo + size choice
+
+    materials: ['Epoxy Resin', 'Dried Flowers', 'Pearl Beads', 'Seashells', 'Pressed Greenery'],
+    dimensions: '15 cm or 20 cm diameter (choose at checkout)',
+    weight: '~200–350 g',
+  },
+
 ];
 
+// ────────────────────────────────────────────
+// TESTIMONIALS
+// ────────────────────────────────────────────
 export const testimonials = [
   {
     id: 1,
     name: 'Dilani Perera',
     location: 'Colombo',
     rating: 5,
-    comment: 'The resin rose keychain I ordered was absolutely gorgeous! It arrived beautifully packaged and looked even better than the photos. My friend loved it as a birthday gift. Will definitely order again!',
-    product: 'Resin Rose Keychain',
+    comment:
+      'The personalized ocean keychain I ordered was absolutely gorgeous! The seashells inside look so real and the gold text of my name was perfect. My friend cried when she opened it!',
+    product: 'Personalized Ocean Keychain',
     avatar: 'DP',
   },
   {
@@ -543,8 +391,9 @@ export const testimonials = [
     name: 'Kasun Fernando',
     location: 'Kandy',
     rating: 5,
-    comment: 'Ordered a personalized gift box for my girlfriend\'s anniversary — she was in tears! The quality is incredible and everything was wrapped so beautifully. IMO Craft truly puts love into every item.',
-    product: 'Personalized Gift Box',
+    comment:
+      'Ordered 100 round moon keychains for our college event. IMO Craft delivered all on time, every single piece was perfect. Everyone loved them. Will definitely order again for next year!',
+    product: 'Round Custom Text Keychain',
     avatar: 'KF',
   },
   {
@@ -552,8 +401,9 @@ export const testimonials = [
     name: 'Nadeeka Silva',
     location: 'Galle',
     rating: 5,
-    comment: 'The soap flower bouquet was a showstopper at the wedding! Everyone was asking where it was from. High quality, fast delivery, and amazing packaging. 10/10!',
-    product: 'Soap Flower Bouquet',
+    comment:
+      'The resin photo frame was the most beautiful gift I\'ve ever given. The flowers around the border are real and preserved perfectly. My mother keeps it in her room. Truly a masterpiece!',
+    product: 'Resin Photo Frame – Circular Floral',
     avatar: 'NS',
   },
   {
@@ -561,8 +411,9 @@ export const testimonials = [
     name: 'Priya Rathnayake',
     location: 'Negombo',
     rating: 4,
-    comment: 'Ordered the macramé wall hanging and it looks stunning in my living room. The craftsmanship is excellent and the service was very responsive. Slight delay in shipping but worth the wait.',
-    product: 'Macramé Wall Hanging',
+    comment:
+      'Got the glitter letter keychain in my initial "P" in purple. It\'s so sparkly and the quality is excellent. Packaging was also very cute. Slight delay but worth the wait!',
+    product: 'Glitter Letter Keychain',
     avatar: 'PR',
   },
   {
@@ -570,16 +421,20 @@ export const testimonials = [
     name: 'Tharindi Bandara',
     location: 'Colombo',
     rating: 5,
-    comment: 'The name plate keychains were perfect for our school event giveaways! Ordered 30 pieces and they were all perfect. Super affordable and each one was uniquely beautiful.',
-    product: 'Name Plate Keychain',
+    comment:
+      'The name pens I ordered for my class farewell were a huge hit! Every pen came out perfectly with each student\'s name. The blue glitter color is just stunning. Thank you IMO Craft!',
+    product: 'Personalized Glitter Pen',
     avatar: 'TB',
   },
 ];
 
-export const getFeaturedProducts = () => products.filter(p => p.isFeatured);
+// ────────────────────────────────────────────
+// HELPER FUNCTIONS
+// ────────────────────────────────────────────
+export const getFeaturedProducts   = () => products.filter(p => p.isFeatured);
 export const getBestsellerProducts = () => products.filter(p => p.isBestseller);
-export const getNewProducts = () => products.filter(p => p.isNew);
+export const getNewProducts        = () => products.filter(p => p.isNew);
 export const getProductsByCategory = (categoryId) => products.filter(p => p.category === categoryId);
-export const getProductById = (id) => products.find(p => p.id === Number(id));
-export const getRelatedProducts = (product, limit = 4) =>
+export const getProductById        = (id) => products.find(p => p.id === Number(id));
+export const getRelatedProducts    = (product, limit = 4) =>
   products.filter(p => p.category === product.category && p.id !== product.id).slice(0, limit);
