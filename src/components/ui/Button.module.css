@@ -1,0 +1,96 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Sizes */
+.sm {
+  padding: 0.45rem 1.1rem;
+  font-size: 0.82rem;
+}
+.md {
+  padding: 0.7rem 1.6rem;
+  font-size: 0.95rem;
+}
+.lg {
+  padding: 0.9rem 2.2rem;
+  font-size: 1.05rem;
+}
+
+/* Variants */
+.primary {
+  background: linear-gradient(135deg, var(--accent-rose), var(--accent-rose-dark));
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(201, 120, 90, 0.35);
+}
+.primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(201, 120, 90, 0.45);
+  background: linear-gradient(135deg, var(--accent-rose-light), var(--accent-rose));
+}
+.primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.secondary {
+  background: var(--warm-white);
+  color: var(--accent-rose);
+  border-color: var(--accent-rose);
+}
+.secondary:hover:not(:disabled) {
+  background: var(--accent-rose);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(201, 120, 90, 0.3);
+}
+
+.ghost {
+  background: transparent;
+  color: var(--text-medium);
+  border-color: var(--border);
+}
+.ghost:hover:not(:disabled) {
+  background: var(--parchment);
+  border-color: var(--accent-rose);
+  color: var(--accent-rose);
+}
+
+.gold {
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(212, 168, 83, 0.35);
+}
+.gold:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(212, 168, 83, 0.45);
+}
+
+.danger {
+  background: #e74c3c;
+  color: #fff;
+}
+.danger:hover:not(:disabled) {
+  background: #c0392b;
+  transform: translateY(-2px);
+}
+
+.fullWidth {
+  width: 100%;
+}

@@ -1,0 +1,302 @@
+.pageHeader {
+  background: linear-gradient(135deg, var(--parchment) 0%, var(--warm-white) 100%);
+  padding: 3rem 0 2rem;
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 2.5rem;
+}
+
+.pageTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0.25rem 0 0.5rem;
+}
+
+.pageSubtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* Layout */
+.layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 2.5rem;
+  padding-bottom: 4rem;
+  align-items: start;
+}
+
+/* Sidebar */
+.sidebar {
+  position: sticky;
+  top: calc(var(--navbar-height) + 1.5rem);
+  background: var(--warm-white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebarTitle {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.clearBtn {
+  font-size: 0.78rem;
+  color: var(--accent-rose);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  transition: opacity var(--transition-fast);
+}
+
+.clearBtn:hover {
+  opacity: 0.75;
+}
+
+.filterGroup {
+  border-top: 1px solid var(--border-light);
+  padding-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filterLabel {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
+}
+
+/* Category Buttons */
+.catBtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 0.85rem;
+  border-radius: var(--radius-sm);
+  background: none;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-medium);
+  transition: all var(--transition-fast);
+  text-align: left;
+  font-family: var(--font-body);
+}
+
+.catBtn:hover {
+  background: rgba(201, 120, 90, 0.07);
+  color: var(--accent-rose);
+}
+
+.catBtnActive {
+  background: rgba(201, 120, 90, 0.1) !important;
+  color: var(--accent-rose) !important;
+  border-color: var(--accent-rose-light) !important;
+  font-weight: 700;
+}
+
+.catCount {
+  background: var(--parchment);
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+/* Price Range */
+.priceLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.rangeInput {
+  width: 100%;
+  accent-color: var(--accent-rose);
+  cursor: pointer;
+}
+
+/* Quick Filters */
+.quickFilters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.quickFilter {
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--radius-sm);
+  background: var(--parchment);
+  border: 1.5px solid var(--border-light);
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--text-medium);
+  text-align: left;
+  transition: all var(--transition-fast);
+  font-family: var(--font-body);
+}
+
+.quickFilter:hover {
+  border-color: var(--accent-rose-light);
+  color: var(--accent-rose);
+  background: rgba(201, 120, 90, 0.06);
+}
+
+/* Products Area */
+.productsArea {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: var(--warm-white);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.filterToggle {
+  display: none;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-full);
+  background: var(--parchment);
+  border: 1.5px solid var(--border);
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--text-medium);
+  font-family: var(--font-body);
+  font-weight: 700;
+  transition: all var(--transition-fast);
+}
+
+.filterToggle:hover {
+  background: rgba(201, 120, 90, 0.1);
+  border-color: var(--accent-rose-light);
+  color: var(--accent-rose);
+}
+
+.sortWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-left: auto;
+}
+
+.sortLabel {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.sortSelect {
+  padding: 0.45rem 0.85rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--cream);
+  color: var(--text-dark);
+  font-size: 0.85rem;
+  cursor: pointer;
+  outline: none;
+  transition: border-color var(--transition-fast);
+  font-family: var(--font-body);
+}
+
+.sortSelect:focus {
+  border-color: var(--accent-rose);
+}
+
+/* Active Filters */
+.activeFilters {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.activeFilter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.7rem;
+  background: rgba(201, 120, 90, 0.1);
+  border: 1.5px solid var(--accent-rose-light);
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  color: var(--accent-rose);
+  font-weight: 700;
+}
+
+.activeFilter button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--accent-rose);
+  font-size: 0.75rem;
+  padding: 0;
+  line-height: 1;
+  opacity: 0.75;
+  transition: opacity var(--transition-fast);
+}
+
+.activeFilter button:hover {
+  opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: var(--navbar-height);
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    transform: translateX(-100%);
+    transition: transform var(--transition-slow);
+    z-index: 500;
+    border-radius: 0;
+    overflow-y: auto;
+  }
+
+  .sidebarOpen {
+    transform: translateX(0);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .filterToggle {
+    display: flex;
+  }
+}

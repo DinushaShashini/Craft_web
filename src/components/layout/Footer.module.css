@@ -1,0 +1,236 @@
+.footer {
+  background: var(--text-dark);
+  color: var(--parchment);
+  position: relative;
+  margin-top: auto;
+}
+
+.topWave {
+  height: 60px;
+  background: var(--cream);
+  clip-path: ellipse(55% 100% at 50% 0%);
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 3rem;
+  padding-top: 2.5rem;
+  padding-bottom: 3rem;
+}
+
+/* Brand */
+.brand {}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  margin-bottom: 1rem;
+}
+
+.logoIcon {
+  font-size: 1.4rem;
+  color: var(--accent-rose-light);
+}
+
+.logoMain {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--warm-white);
+  display: block;
+  line-height: 1.1;
+}
+
+.logoSub {
+  font-family: var(--font-script);
+  font-size: 0.68rem;
+  color: var(--accent-rose-light);
+  display: block;
+}
+
+.tagline {
+  font-size: 0.88rem;
+  color: rgba(253, 248, 243, 0.7);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.social {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.socialBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(253, 248, 243, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  color: var(--parchment);
+  text-decoration: none;
+  transition: all var(--transition);
+  border: 1px solid rgba(253, 248, 243, 0.2);
+}
+
+.socialBtn:hover {
+  background: var(--accent-rose);
+  border-color: var(--accent-rose);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(201, 120, 90, 0.4);
+}
+
+/* Links */
+.links {}
+
+.linkHeading {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--warm-white);
+  margin-bottom: 1.2rem;
+  position: relative;
+  padding-bottom: 0.6rem;
+}
+
+.linkHeading::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 28px;
+  height: 2px;
+  background: var(--accent-rose);
+  border-radius: 2px;
+}
+
+.links ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  list-style: none;
+}
+
+.linkItem {
+  font-size: 0.88rem;
+  color: rgba(253, 248, 243, 0.7);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  display: inline-block;
+}
+
+.linkItem:hover {
+  color: var(--accent-rose-light);
+  transform: translateX(4px);
+}
+
+/* Contact */
+.contact {}
+
+.contactItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.88rem;
+  color: rgba(253, 248, 243, 0.75);
+}
+
+.contactLink {
+  color: rgba(253, 248, 243, 0.75);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.contactLink:hover {
+  color: var(--accent-rose-light);
+}
+
+.whatsappBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  padding: 0.65rem 1.3rem;
+  background: #25D366;
+  color: #fff;
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition: all var(--transition);
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3);
+}
+
+.whatsappBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
+  background: #20bd5a;
+}
+
+/* Bottom Bar */
+.bottomBar {
+  border-top: 1px solid rgba(253, 248, 243, 0.1);
+  padding: 1.2rem 0;
+}
+
+.bottomInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.copyright {
+  font-size: 0.82rem;
+  color: rgba(253, 248, 243, 0.5);
+}
+
+.bottomLinks {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: rgba(253, 248, 243, 0.35);
+}
+
+.bottomLink {
+  color: rgba(253, 248, 243, 0.5);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.bottomLink:hover {
+  color: var(--accent-rose-light);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .content {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  .brand {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 600px) {
+  .content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .brand {
+    grid-column: span 1;
+  }
+  .bottomInner {
+    flex-direction: column;
+    text-align: center;
+  }
+}

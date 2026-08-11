@@ -1,0 +1,35 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  gap: 1rem;
+}
+
+.icon {
+  font-size: 3.5rem;
+  margin-bottom: 0.5rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  max-width: 360px;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
