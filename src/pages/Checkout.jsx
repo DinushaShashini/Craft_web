@@ -1,331 +1,773 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import Button from '../components/ui/Button';
 import styles from './Checkout.module.css';
 
-const STEPS = ['Your Info', 'Review & Confirm'];
+// ─── Sri Lanka data ────────────────────────────────────────────
+const PROVINCES = [
+  'Western Province', 'Central Province', 'Southern Province',
+  'Northern Province', 'Eastern Province', 'North Western Province',
+  'North Central Province', 'Uva Province', 'Sabaragamuwa Province',
+];
 
-function StepIndicator({ currentStep }) {
+const DISTRICTS = {
+  'Western Province':      ['Colombo', 'Gampaha', 'Kalutara'],
+  'Central Province':      ['Kandy', 'Matale', 'Nuwara Eliya'],
+  'Southern Province':     ['Galle', 'Matara', 'Hambantota'],
+  'Northern Province':     ['Jaffna', 'Kilinochchi', 'Mannar', 'Mullaitivu', 'Vavuniya'],
+  'Eastern Province':      ['Ampara', 'Batticaloa', 'Trincomalee'],
+  'North Western Province':['Kurunegala', 'Puttalam'],
+  'North Central Province':['Anuradhapura', 'Polonnaruwa'],
+  'Uva Province':          ['Badulla', 'Monaragala'],
+  'Sabaragamuwa Province': ['Kegalle', 'Ratnapura'],
+};
+
+const DELIVERY_OPTIONS = [
+  {
+    id: 'standard',
+    label: 'Standard Delivery',
+    icon: '📦',
+    duration: '3–5 business days',
+    fee: 200,
+    freeover: 2000,
+    desc: 'Reliable islandwide delivery via registered courier.',
+  },
+  {
+    id: 'express',
+    label: 'Express Delivery',
+    icon: '⚡',
+    duration: '1–2 business days',
+    fee: 450,
+    freeover: null,
+    desc: 'Priority dispatch. Available for Colombo & suburbs.',
+  },
+];
+
+const PAYMENT_METHODS = [
+  {
+    id: 'card',
+    label: 'Card Payment',
+    icon: '💳',
+    desc: 'Visa / Mastercard / Amex — secure online payment',
+    badge: 'Coming Soon',
+    disabled: true,
+  },
+  {
+    id: 'bank',
+    label: 'Bank Transfer',
+    icon: '🏦',
+    desc: "Pay directly to our bank account. We'll confirm after receipt.",
+    badge: null,
+    disabled: false,
+  },
+  {
+    id: 'cod',
+    label: 'Cash on Delivery',
+    icon: '💵',
+    desc: 'Pay in cash when your order arrives at your door.',
+    badge: null,
+    disabled: false,
+  },
+];
+
+// ─── Helpers ───────────────────────────────────────────────────
+function FieldError({ msg }) {
+  if (!msg) return null;
+  return <span className={styles.fieldErr}><span>⚠</span>{msg}</span>;
+}
+
+function FormInput({ id, label, required, error, hint, children, ...props }) {
   return (
-    <div className={styles.steps}>
-      {STEPS.map((step, i) => (
-        <div key={step} className={styles.stepRow}>
-          <div className={`${styles.step} ${i <= currentStep ? styles.stepActive : ''} ${i < currentStep ? styles.stepDone : ''}`}>
-            <div className={styles.stepCircle}>
-              {i < currentStep ? '✓' : i + 1}
-            </div>
-            <span className={styles.stepLabel}>{step}</span>
-          </div>
-          {i < STEPS.length - 1 && (
-            <div className={`${styles.stepLine} ${i < currentStep ? styles.stepLineDone : ''}`} />
-          )}
-        </div>
-      ))}
+    <div className={styles.field}>
+      <label className={styles.label} htmlFor={id}>
+        {label}{required && <span className={styles.req}>*</span>}
+      </label>
+      {children || (
+        <input
+          id={id}
+          className={`${styles.input} ${error ? styles.inputErr : ''}`}
+          {...props}
+        />
+      )}
+      {hint && !error && <span className={styles.hint}>{hint}</span>}
+      <FieldError msg={error} />
     </div>
   );
 }
 
+// ─── Step indicator ────────────────────────────────────────────
+const STEPS = [
+  { label: 'Contact',  icon: '👤' },
+  { label: 'Delivery', icon: '🚚' },
+  { label: 'Payment',  icon: '💳' },
+  { label: 'Review',   icon: '✅' },
+];
+
+function StepBar({ current }) {
+  return (
+    <div className={styles.stepBar} role="list" aria-label="Checkout steps">
+      {STEPS.map((s, i) => {
+        const done    = i < current;
+        const active  = i === current;
+        return (
+          <div key={s.label} className={styles.stepItem} role="listitem">
+            <div className={`${styles.stepCircle} ${done ? styles.stepDone : active ? styles.stepActive : ''}`}>
+              {done ? '✓' : s.icon}
+            </div>
+            <span className={`${styles.stepLabel} ${active ? styles.stepLabelActive : ''}`}>{s.label}</span>
+            {i < STEPS.length - 1 && (
+              <div className={`${styles.stepLine} ${done ? styles.stepLineDone : ''}`} />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ─── Section wrapper ───────────────────────────────────────────
+function Section({ icon, title, children, badge }) {
+  return (
+    <div className={styles.section}>
+      <div className={styles.sectionHead}>
+        <span className={styles.sectionIcon}>{icon}</span>
+        <h2 className={styles.sectionTitle}>{title}</h2>
+        {badge && <span className={styles.sectionBadge}>{badge}</span>}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+// ─── Order Summary sidebar ─────────────────────────────────────
+function OrderSummary({ cartItems, cartSubtotal, couponDiscount, appliedCoupon, deliveryFee, cartTotal }) {
+  const finalDelivery = deliveryFee;
+  const finalTotal    = Math.max(0, cartSubtotal - couponDiscount) + finalDelivery;
+
+  return (
+    <aside className={styles.summary}>
+      <h2 className={styles.summaryTitle}>Order Summary</h2>
+
+      {/* Item list */}
+      <div className={styles.summaryItems}>
+        {cartItems.map(item => (
+          <div key={`${item.id}-${item.customization}`} className={styles.summaryItem}>
+            <div className={styles.summaryItemImg}>
+              <img src={item.images?.[0]} alt={item.name} />
+              <span className={styles.summaryItemQty}>{item.quantity}</span>
+            </div>
+            <div className={styles.summaryItemInfo}>
+              <span className={styles.summaryItemName}>{item.name}</span>
+              {item.customization && (
+                <span className={styles.summaryItemCustom}>✏️ {item.customization}</span>
+              )}
+            </div>
+            <span className={styles.summaryItemPrice}>Rs.&nbsp;{(item.price * item.quantity).toLocaleString()}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className={styles.summaryDivider} />
+
+      {/* Totals */}
+      <div className={styles.summaryRows}>
+        <div className={styles.summaryRow}>
+          <span>Subtotal</span>
+          <span>Rs. {cartSubtotal.toLocaleString()}</span>
+        </div>
+        {couponDiscount > 0 && (
+          <div className={`${styles.summaryRow} ${styles.discountRow}`}>
+            <span>Discount {appliedCoupon && <span className={styles.couponBadge}>{appliedCoupon.code}</span>}</span>
+            <span>− Rs. {couponDiscount.toLocaleString()}</span>
+          </div>
+        )}
+        <div className={styles.summaryRow}>
+          <span>Delivery</span>
+          <span className={finalDelivery === 0 ? styles.freeTag : ''}>
+            {finalDelivery === 0 ? 'Free 🎉' : `Rs. ${finalDelivery}`}
+          </span>
+        </div>
+        <div className={styles.summaryDivider} />
+        <div className={`${styles.summaryRow} ${styles.totalRow}`}>
+          <span>Total</span>
+          <span className={styles.totalAmt}>Rs. {finalTotal.toLocaleString()}</span>
+        </div>
+        {couponDiscount > 0 && (
+          <p className={styles.savingNote}>🎉 You save Rs. {couponDiscount.toLocaleString()} on this order!</p>
+        )}
+      </div>
+
+      {/* Trust badges */}
+      <div className={styles.trustGrid}>
+        {['🔒 Secure Checkout', '💝 Gift Wrapped', '📦 Track Your Order', '✅ Quality Checked'].map(t => (
+          <span key={t} className={styles.trustBadge}>{t}</span>
+        ))}
+      </div>
+    </aside>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MAIN COMPONENT
+// ═══════════════════════════════════════════════════════════════
 export default function Checkout() {
   const navigate = useNavigate();
-  const { cartItems, cartTotal, cartCount, clearCart } = useCart();
-  const [step, setStep] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
+  const {
+    cartItems, cartSubtotal, couponDiscount, appliedCoupon,
+    shipping: contextShipping, cartTotal, clearCart,
+  } = useCart();
 
+  const [step, setStep] = useState(0);   // 0=Contact 1=Delivery 2=Payment 3=Review
+  const [placing, setPlacing] = useState(false);
+  const confirmingRef = useRef(false);  // prevents redirect guard during order submission
+
+  // Form data
   const [form, setForm] = useState({
-    firstName: '', lastName: '', email: '', phone: '',
-    address: '', city: '', district: '', postalCode: '',
-    notes: '', paymentMethod: 'bank',
+    fullName:    '',
+    phone:       '',
+    email:       '',
+    address:     '',
+    city:        '',
+    province:    '',
+    district:    '',
+    postalCode:  '',
+    notes:       '',
+    delivery:    'standard',
+    payment:     'bank',
   });
 
   const [errors, setErrors] = useState({});
 
-  const shipping = cartTotal > 2000 ? 0 : 200;
-  const total = cartTotal + shipping;
+  // Redirect if cart is empty — but NOT while submitting an order
+  useEffect(() => {
+    if (cartItems.length === 0 && !confirmingRef.current) navigate('/cart');
+  }, [cartItems, navigate]);
 
-  const validate = () => {
-    const e = {};
-    if (!form.firstName.trim()) e.firstName = 'Required';
-    if (!form.lastName.trim()) e.lastName = 'Required';
-    if (!form.email.trim() || !form.email.includes('@')) e.email = 'Valid email required';
-    if (!form.phone.trim() || form.phone.length < 9) e.phone = 'Valid phone required';
-    if (!form.address.trim()) e.address = 'Required';
-    if (!form.city.trim()) e.city = 'Required';
-    if (!form.district.trim()) e.district = 'Required';
+  // Computed delivery fee
+  const deliveryOption = DELIVERY_OPTIONS.find(d => d.id === form.delivery);
+  const deliveryFee    = deliveryOption
+    ? (deliveryOption.freeover && cartSubtotal >= deliveryOption.freeover ? 0 : deliveryOption.fee)
+    : 0;
+
+  const finalSubtotal  = Math.max(0, cartSubtotal - couponDiscount);
+  const finalTotal     = finalSubtotal + deliveryFee;
+
+  // ── Validation ─────────────────────────────────────────────
+  const VALIDATORS = {
+    0: () => {
+      const e = {};
+      if (!form.fullName.trim())                          e.fullName  = 'Full name is required.';
+      if (!/^0[0-9]{9}$/.test(form.phone.replace(/\s/g,'')))
+                                                          e.phone     = 'Enter a valid Sri Lankan phone number (e.g. 0771234567).';
+      if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
+                                                          e.email     = 'Enter a valid email address.';
+      if (!form.address.trim())                           e.address   = 'Delivery address is required.';
+      if (!form.city.trim())                              e.city      = 'City is required.';
+      if (!form.province)                                 e.province  = 'Please select a province.';
+      if (!form.district)                                 e.district  = 'Please select a district.';
+      return e;
+    },
+    1: () => ({}),   // delivery — always valid (radio)
+    2: () => ({}),   // payment  — always valid (radio)
+    3: () => ({}),   // review   — no extra fields
+  };
+
+  const validate = (stepIdx = step) => {
+    const e = VALIDATORS[stepIdx]?.() || {};
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
-  const handleChange = (e) => {
-    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
-    if (errors[e.target.name]) {
-      setErrors(prev => ({ ...prev, [e.target.name]: '' }));
-    }
+  const handleChange = (name, value) => {
+    setForm(f => {
+      const updated = { ...f, [name]: value };
+      // Reset district when province changes
+      if (name === 'province') updated.district = '';
+      return updated;
+    });
+    setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
   const handleNext = () => {
-    if (validate()) setStep(1);
+    if (validate(step)) setStep(s => s + 1);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const orderNum = 'IMO' + Math.random().toString(36).substr(2, 6).toUpperCase();
-    clearCart();
-    setSubmitted(true);
-    setTimeout(() => navigate(`/order-tracking?order=${orderNum}`), 500);
-  };
+  const handleBack = () => setStep(s => s - 1);
 
-  if (cartItems.length === 0 && !submitted) {
-    navigate('/cart');
-    return null;
-  }
+  const handlePlaceOrder = useCallback(() => {
+    setPlacing(true);
+    confirmingRef.current = true;  // suppress the empty-cart redirect
+
+    // Generate IMO-YYYY-NNNNN format order number
+    const year    = new Date().getFullYear();
+    const seq     = String(Math.floor(10000 + Math.random() * 90000));
+    const orderNumber = `IMO-${year}-${seq}`;
+
+    // Build full order snapshot to pass to confirmation page
+    const orderSnapshot = {
+      orderNumber,
+      customerName: form.fullName,
+      phone:        form.phone,
+      email:        form.email,
+      address:      form.address,
+      city:         form.city,
+      district:     form.district,
+      province:     form.province,
+      postalCode:   form.postalCode,
+      notes:        form.notes,
+      deliveryType: form.delivery,
+      paymentMethod:form.payment,
+      items:        cartItems.map(i => ({
+        id:            i.id,
+        name:          i.name,
+        category:      i.category,
+        price:         i.price,
+        quantity:      i.quantity,
+        customization: i.customization,
+        images:        i.images,
+      })),
+      subtotal:       cartSubtotal,
+      couponDiscount: couponDiscount,
+      deliveryFee:    deliveryFee,
+      total:          finalTotal,
+      placedAt:       new Date().toISOString(),
+    };
+
+    setTimeout(() => {
+      clearCart();
+      navigate('/order-confirmation', { state: { order: orderSnapshot } });
+    }, 1200);
+  }, [form, cartItems, cartSubtotal, couponDiscount, deliveryFee, finalTotal, clearCart, navigate]);
+
+  if (cartItems.length === 0) return null;
+
+  const districts = form.province ? DISTRICTS[form.province] || [] : [];
 
   return (
-    <main className={styles.checkoutPage}>
+    <main className={styles.page}>
       <div className="container">
+
+        {/* Page header */}
         <div className={styles.pageHeader}>
-          <h1 className={styles.title}>Checkout</h1>
-          <StepIndicator currentStep={step} />
+          <div>
+            <Link to="/cart" className={styles.backLink}>← Back to Cart</Link>
+            <h1 className={styles.pageTitle}>Checkout</h1>
+          </div>
+          <StepBar current={step} />
         </div>
 
         <div className={styles.layout}>
-          {/* Form */}
-          <div className={styles.formArea}>
+
+          {/* ── LEFT: Form panels ── */}
+          <div className={styles.formCol}>
+
+            {/* ════ STEP 0: Customer Information ════ */}
             {step === 0 && (
-              <div className={styles.formCard}>
-                <h2 className={styles.sectionTitle}>📦 Shipping Information</h2>
-                <form className={styles.form} onSubmit={e => { e.preventDefault(); handleNext(); }}>
-                  <div className={styles.formRow}>
-                    <div className={styles.field}>
-                      <label className={styles.label} htmlFor="firstName">First Name *</label>
-                      <input
-                        id="firstName"
-                        name="firstName"
-                        className={`${styles.input} ${errors.firstName ? styles.inputError : ''}`}
-                        value={form.firstName}
-                        onChange={handleChange}
-                        placeholder="Dilani"
-                      />
-                      {errors.firstName && <span className={styles.error}>{errors.firstName}</span>}
-                    </div>
-                    <div className={styles.field}>
-                      <label className={styles.label} htmlFor="lastName">Last Name *</label>
-                      <input
-                        id="lastName"
-                        name="lastName"
-                        className={`${styles.input} ${errors.lastName ? styles.inputError : ''}`}
-                        value={form.lastName}
-                        onChange={handleChange}
-                        placeholder="Perera"
-                      />
-                      {errors.lastName && <span className={styles.error}>{errors.lastName}</span>}
-                    </div>
-                  </div>
-
-                  <div className={styles.formRow}>
-                    <div className={styles.field}>
-                      <label className={styles.label} htmlFor="email">Email Address *</label>
-                      <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
-                        value={form.email}
-                        onChange={handleChange}
-                        placeholder="dilani@email.com"
-                      />
-                      {errors.email && <span className={styles.error}>{errors.email}</span>}
-                    </div>
-                    <div className={styles.field}>
-                      <label className={styles.label} htmlFor="phone">Phone Number *</label>
-                      <input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        className={`${styles.input} ${errors.phone ? styles.inputError : ''}`}
-                        value={form.phone}
-                        onChange={handleChange}
-                        placeholder="07X XXX XXXX"
-                      />
-                      {errors.phone && <span className={styles.error}>{errors.phone}</span>}
-                    </div>
-                  </div>
-
-                  <div className={styles.field}>
-                    <label className={styles.label} htmlFor="address">Address *</label>
-                    <input
-                      id="address"
-                      name="address"
-                      className={`${styles.input} ${errors.address ? styles.inputError : ''}`}
-                      value={form.address}
-                      onChange={handleChange}
-                      placeholder="123/A, Main Street"
+              <>
+                <Section icon="👤" title="Contact Information">
+                  <div className={styles.fieldGrid2}>
+                    <FormInput
+                      id="fullName" label="Full Name" required
+                      error={errors.fullName}
+                      placeholder="e.g. Dilani Perera"
+                      name="fullName"
+                      value={form.fullName}
+                      onChange={e => handleChange('fullName', e.target.value)}
+                      autoComplete="name"
                     />
-                    {errors.address && <span className={styles.error}>{errors.address}</span>}
+                    <FormInput
+                      id="phone" label="Phone Number" required
+                      error={errors.phone}
+                      placeholder="0771234567"
+                      name="phone"
+                      type="tel"
+                      value={form.phone}
+                      onChange={e => handleChange('phone', e.target.value)}
+                      hint="Sri Lankan mobile number (10 digits)"
+                      autoComplete="tel"
+                    />
                   </div>
+                  <FormInput
+                    id="email" label="Email Address" required
+                    error={errors.email}
+                    placeholder="dilani@email.com"
+                    name="email"
+                    type="email"
+                    value={form.email}
+                    onChange={e => handleChange('email', e.target.value)}
+                    hint="Order confirmation will be sent here"
+                    autoComplete="email"
+                  />
+                </Section>
 
-                  <div className={styles.formRow3}>
+                <Section icon="📍" title="Delivery Address">
+                  <FormInput
+                    id="address" label="Street Address" required
+                    error={errors.address}
+                    placeholder="123/A, Main Street, Nugegoda"
+                    name="address"
+                    value={form.address}
+                    onChange={e => handleChange('address', e.target.value)}
+                    autoComplete="street-address"
+                  />
+                  <div className={styles.fieldGrid2}>
+                    <FormInput
+                      id="city" label="City / Town" required
+                      error={errors.city}
+                      placeholder="Colombo"
+                      name="city"
+                      value={form.city}
+                      onChange={e => handleChange('city', e.target.value)}
+                      autoComplete="address-level2"
+                    />
                     <div className={styles.field}>
-                      <label className={styles.label} htmlFor="city">City *</label>
-                      <input
-                        id="city"
-                        name="city"
-                        className={`${styles.input} ${errors.city ? styles.inputError : ''}`}
-                        value={form.city}
-                        onChange={handleChange}
-                        placeholder="Colombo"
-                      />
-                      {errors.city && <span className={styles.error}>{errors.city}</span>}
+                      <label className={styles.label} htmlFor="province">
+                        Province<span className={styles.req}>*</span>
+                      </label>
+                      <select
+                        id="province"
+                        className={`${styles.input} ${errors.province ? styles.inputErr : ''}`}
+                        value={form.province}
+                        onChange={e => handleChange('province', e.target.value)}
+                      >
+                        <option value="">Select Province</option>
+                        {PROVINCES.map(p => <option key={p} value={p}>{p}</option>)}
+                      </select>
+                      <FieldError msg={errors.province} />
                     </div>
+                  </div>
+                  <div className={styles.fieldGrid2}>
                     <div className={styles.field}>
-                      <label className={styles.label} htmlFor="district">District *</label>
+                      <label className={styles.label} htmlFor="district">
+                        District<span className={styles.req}>*</span>
+                      </label>
                       <select
                         id="district"
-                        name="district"
-                        className={`${styles.input} ${errors.district ? styles.inputError : ''}`}
+                        className={`${styles.input} ${errors.district ? styles.inputErr : ''}`}
                         value={form.district}
-                        onChange={handleChange}
+                        onChange={e => handleChange('district', e.target.value)}
+                        disabled={!form.province}
                       >
-                        <option value="">Select District</option>
-                        {['Colombo','Gampaha','Kandy','Galle','Matara','Jaffna','Anuradhapura',
-                          'Ratnapura','Badulla','Kurunegala','Puttalam','Trincomalee','Batticaloa',
-                          'Ampara','Kegalle','Nuwara Eliya','Monaragala','Hambantota','Polonnaruwa',
-                          'Vavuniya','Mannar','Mullativu','Killinochchi'].map(d => (
-                          <option key={d} value={d}>{d}</option>
-                        ))}
+                        <option value="">{form.province ? 'Select District' : '— Select Province first —'}</option>
+                        {districts.map(d => <option key={d} value={d}>{d}</option>)}
                       </select>
-                      {errors.district && <span className={styles.error}>{errors.district}</span>}
+                      <FieldError msg={errors.district} />
                     </div>
-                    <div className={styles.field}>
-                      <label className={styles.label} htmlFor="postalCode">Postal Code</label>
-                      <input
-                        id="postalCode"
-                        name="postalCode"
-                        className={styles.input}
-                        value={form.postalCode}
-                        onChange={handleChange}
-                        placeholder="00100"
-                      />
-                    </div>
-                  </div>
-
-                  <div className={styles.field}>
-                    <label className={styles.label} htmlFor="notes">Order Notes (optional)</label>
-                    <textarea
-                      id="notes"
-                      name="notes"
-                      className={`${styles.input} ${styles.textarea}`}
-                      value={form.notes}
-                      onChange={handleChange}
-                      placeholder="Any special instructions for your order..."
-                      rows={3}
+                    <FormInput
+                      id="postalCode" label="Postal Code"
+                      placeholder="00100"
+                      name="postalCode"
+                      value={form.postalCode}
+                      onChange={e => handleChange('postalCode', e.target.value)}
+                      maxLength={5}
+                      autoComplete="postal-code"
                     />
                   </div>
-
-                  {/* Payment Method */}
-                  <div className={styles.paymentSection}>
-                    <h3 className={styles.paymentTitle}>Payment Method</h3>
-                    <div className={styles.paymentOptions}>
-                      {[
-                        { value: 'bank', label: '🏦 Bank Transfer', desc: 'Pay via bank transfer – we\'ll send account details' },
-                        { value: 'cash', label: '💵 Cash on Delivery', desc: 'Pay when you receive your order' },
-                        { value: 'online', label: '📱 Online Payment', desc: 'FriMi, Genie, eZ Cash, etc.' },
-                      ].map(p => (
-                        <label key={p.value} className={`${styles.payOption} ${form.paymentMethod === p.value ? styles.payOptionActive : ''}`}>
-                          <input
-                            type="radio"
-                            name="paymentMethod"
-                            value={p.value}
-                            checked={form.paymentMethod === p.value}
-                            onChange={handleChange}
-                            className={styles.radioInput}
-                          />
-                          <div>
-                            <strong>{p.label}</strong>
-                            <p>{p.desc}</p>
-                          </div>
-                        </label>
-                      ))}
-                    </div>
+                  <div className={styles.field}>
+                    <label className={styles.label} htmlFor="notes">
+                      Order Notes <span className={styles.optional}>(optional)</span>
+                    </label>
+                    <textarea
+                      id="notes"
+                      className={styles.input}
+                      value={form.notes}
+                      onChange={e => handleChange('notes', e.target.value)}
+                      placeholder="Special delivery instructions, landmark, gift message…"
+                      rows={3}
+                      style={{ resize: 'vertical', minHeight: 80 }}
+                    />
                   </div>
+                </Section>
 
-                  <Button type="submit" variant="primary" size="lg" fullWidth>
-                    Review Order →
-                  </Button>
-                </form>
-              </div>
+                <div className={styles.stepActions}>
+                  <Link to="/cart" className={styles.backBtn}>← Back to Cart</Link>
+                  <button className={styles.nextBtn} onClick={handleNext}>
+                    Continue to Delivery →
+                  </button>
+                </div>
+              </>
             )}
 
+            {/* ════ STEP 1: Delivery ════ */}
             {step === 1 && (
-              <div className={styles.formCard}>
-                <h2 className={styles.sectionTitle}>✅ Review Your Order</h2>
-
-                <div className={styles.reviewSection}>
-                  <h3 className={styles.reviewHeading}>Shipping To</h3>
-                  <div className={styles.reviewDetails}>
-                    <p><strong>{form.firstName} {form.lastName}</strong></p>
-                    <p>{form.address}, {form.city}, {form.district} {form.postalCode}</p>
-                    <p>📞 {form.phone}</p>
-                    <p>✉️ {form.email}</p>
-                    {form.notes && <p className={styles.notes}>📝 {form.notes}</p>}
+              <>
+                <Section icon="🚚" title="Delivery Method">
+                  <div className={styles.deliveryOptions}>
+                    {DELIVERY_OPTIONS.map(opt => {
+                      const isFree = opt.freeover && cartSubtotal >= opt.freeover;
+                      const fee    = isFree ? 0 : opt.fee;
+                      const active = form.delivery === opt.id;
+                      return (
+                        <label
+                          key={opt.id}
+                          className={`${styles.deliveryCard} ${active ? styles.deliveryCardActive : ''}`}
+                          htmlFor={`delivery-${opt.id}`}
+                        >
+                          <input
+                            type="radio"
+                            id={`delivery-${opt.id}`}
+                            name="delivery"
+                            value={opt.id}
+                            checked={active}
+                            onChange={() => handleChange('delivery', opt.id)}
+                            className={styles.hiddenRadio}
+                          />
+                          <div className={styles.deliveryCardIcon}>{opt.icon}</div>
+                          <div className={styles.deliveryCardBody}>
+                            <strong className={styles.deliveryCardTitle}>{opt.label}</strong>
+                            <span className={styles.deliveryCardDuration}>🕐 {opt.duration}</span>
+                            <p className={styles.deliveryCardDesc}>{opt.desc}</p>
+                          </div>
+                          <div className={styles.deliveryCardPrice}>
+                            {isFree
+                              ? <span className={styles.freeTag}>Free 🎉</span>
+                              : <span className={styles.deliveryFeeTag}>Rs. {fee}</span>
+                            }
+                          </div>
+                          <div className={`${styles.deliveryRadioMark} ${active ? styles.deliveryRadioMarkActive : ''}`}>
+                            {active && '✓'}
+                          </div>
+                        </label>
+                      );
+                    })}
                   </div>
-                  <button className={styles.editBtn} onClick={() => setStep(0)}>← Edit Info</button>
-                </div>
 
-                <div className={styles.reviewSection}>
-                  <h3 className={styles.reviewHeading}>Items</h3>
-                  {cartItems.map(item => (
-                    <div key={`${item.id}-${item.customization}`} className={styles.reviewItem}>
-                      <img src={item.images[0]} alt={item.name} className={styles.reviewImg} />
-                      <div className={styles.reviewItemDetails}>
-                        <strong>{item.name}</strong>
-                        {item.customization && <span className={styles.reviewCustom}>✏️ {item.customization}</span>}
-                        <span>Qty: {item.quantity}</span>
-                      </div>
-                      <span className={styles.reviewPrice}>Rs. {(item.price * item.quantity).toLocaleString()}</span>
+                  {/* Free shipping note */}
+                  {form.delivery === 'standard' && cartSubtotal < 2000 && (
+                    <div className={styles.shippingNote}>
+                      💡 Add <strong>Rs. {(2000 - cartSubtotal).toLocaleString()}</strong> more to your cart for free standard delivery!
                     </div>
-                  ))}
+                  )}
+                </Section>
+
+                <div className={styles.stepActions}>
+                  <button className={styles.backBtn} onClick={handleBack}>← Back</button>
+                  <button className={styles.nextBtn} onClick={handleNext}>
+                    Continue to Payment →
+                  </button>
+                </div>
+              </>
+            )}
+
+            {/* ════ STEP 2: Payment ════ */}
+            {step === 2 && (
+              <>
+                <Section icon="💳" title="Payment Method">
+                  <div className={styles.paymentOptions}>
+                    {PAYMENT_METHODS.map(pm => {
+                      const active = form.payment === pm.id;
+                      return (
+                        <label
+                          key={pm.id}
+                          className={`${styles.payCard} ${active ? styles.payCardActive : ''} ${pm.disabled ? styles.payCardDisabled : ''}`}
+                          htmlFor={`pay-${pm.id}`}
+                        >
+                          <input
+                            type="radio"
+                            id={`pay-${pm.id}`}
+                            name="payment"
+                            value={pm.id}
+                            checked={active}
+                            onChange={() => !pm.disabled && handleChange('payment', pm.id)}
+                            disabled={pm.disabled}
+                            className={styles.hiddenRadio}
+                          />
+                          <span className={styles.payCardIcon}>{pm.icon}</span>
+                          <div className={styles.payCardBody}>
+                            <strong className={styles.payCardLabel}>{pm.label}</strong>
+                            <p className={styles.payCardDesc}>{pm.desc}</p>
+                          </div>
+                          <div className={styles.payCardRight}>
+                            {pm.badge && <span className={styles.payCardBadge}>{pm.badge}</span>}
+                            <div className={`${styles.payRadioMark} ${active ? styles.payRadioMarkActive : ''}`}>
+                              {active && '✓'}
+                            </div>
+                          </div>
+                        </label>
+                      );
+                    })}
+                  </div>
+
+                  {/* Contextual payment info */}
+                  {form.payment === 'bank' && (
+                    <div className={styles.payInfo}>
+                      <h4 className={styles.payInfoTitle}>🏦 Bank Transfer Details</h4>
+                      <table className={styles.bankTable}>
+                        <tbody>
+                          <tr><td>Bank</td><td><strong>Bank of Ceylon</strong></td></tr>
+                          <tr><td>Account Name</td><td><strong>IMO Craft</strong></td></tr>
+                          <tr><td>Account No.</td><td><strong>XXXX-XXXX-XXXX</strong></td></tr>
+                          <tr><td>Branch</td><td><strong>Colombo Fort</strong></td></tr>
+                        </tbody>
+                      </table>
+                      <p className={styles.payInfoNote}>
+                        💬 Please send your payment slip via WhatsApp after placing your order. Your order will be confirmed once payment is verified (usually within 2–4 hours).
+                      </p>
+                    </div>
+                  )}
+
+                  {form.payment === 'cod' && (
+                    <div className={styles.payInfo}>
+                      <h4 className={styles.payInfoTitle}>💵 Cash on Delivery</h4>
+                      <p className={styles.payInfoNote}>
+                        Pay the exact amount in cash to the delivery agent when your order arrives. Please ensure someone is available to receive the parcel. A confirmation call may be made before delivery.
+                      </p>
+                    </div>
+                  )}
+
+                  {form.payment === 'card' && (
+                    <div className={`${styles.payInfo} ${styles.payInfoDisabled}`}>
+                      <h4 className={styles.payInfoTitle}>💳 Card Payment</h4>
+                      <p className={styles.payInfoNote}>
+                        Secure card payment integration is coming soon. Please use Bank Transfer or Cash on Delivery for now.
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Security note */}
+                  <div className={styles.securityNote}>
+                    🔒 <strong>Secure &amp; Safe:</strong> We never store your card details. All payments are processed through secure channels.
+                  </div>
+                </Section>
+
+                <div className={styles.stepActions}>
+                  <button className={styles.backBtn} onClick={handleBack}>← Back</button>
+                  <button
+                    className={styles.nextBtn}
+                    onClick={handleNext}
+                    disabled={form.payment === 'card'}
+                  >
+                    Review Order →
+                  </button>
+                </div>
+              </>
+            )}
+
+            {/* ════ STEP 3: Review & Confirm ════ */}
+            {step === 3 && (
+              <>
+                {/* Shipping summary */}
+                <Section icon="📋" title="Order Review">
+                  <div className={styles.reviewGrid}>
+
+                    {/* Customer info */}
+                    <div className={styles.reviewBlock}>
+                      <div className={styles.reviewBlockHead}>
+                        <span>👤 Contact & Address</span>
+                        <button className={styles.editLink} onClick={() => setStep(0)}>Edit</button>
+                      </div>
+                      <p className={styles.reviewLine}><strong>{form.fullName}</strong></p>
+                      <p className={styles.reviewLine}>{form.address}</p>
+                      <p className={styles.reviewLine}>{form.city}, {form.district}, {form.province}</p>
+                      {form.postalCode && <p className={styles.reviewLine}>Postal: {form.postalCode}</p>}
+                      <p className={styles.reviewLine}>📞 {form.phone}</p>
+                      <p className={styles.reviewLine}>✉️ {form.email}</p>
+                      {form.notes && (
+                        <p className={`${styles.reviewLine} ${styles.reviewNote}`}>📝 {form.notes}</p>
+                      )}
+                    </div>
+
+                    {/* Delivery */}
+                    <div className={styles.reviewBlock}>
+                      <div className={styles.reviewBlockHead}>
+                        <span>🚚 Delivery</span>
+                        <button className={styles.editLink} onClick={() => setStep(1)}>Edit</button>
+                      </div>
+                      <p className={styles.reviewLine}>
+                        <strong>{deliveryOption?.label}</strong>
+                      </p>
+                      <p className={styles.reviewLine}>🕐 {deliveryOption?.duration}</p>
+                      <p className={styles.reviewLine}>
+                        Fee: {deliveryFee === 0 ? <span className={styles.freeTag}>Free 🎉</span> : `Rs. ${deliveryFee}`}
+                      </p>
+                    </div>
+
+                    {/* Payment */}
+                    <div className={styles.reviewBlock}>
+                      <div className={styles.reviewBlockHead}>
+                        <span>💳 Payment</span>
+                        <button className={styles.editLink} onClick={() => setStep(2)}>Edit</button>
+                      </div>
+                      <p className={styles.reviewLine}>
+                        <strong>{PAYMENT_METHODS.find(p => p.id === form.payment)?.label}</strong>
+                      </p>
+                      <p className={styles.reviewLine}>
+                        {PAYMENT_METHODS.find(p => p.id === form.payment)?.desc}
+                      </p>
+                    </div>
+                  </div>
+                </Section>
+
+                {/* Items in order */}
+                <Section icon="🛍️" title="Your Items" badge={`${cartItems.length} item${cartItems.length !== 1 ? 's' : ''}`}>
+                  <div className={styles.reviewItems}>
+                    {cartItems.map(item => (
+                      <div key={`${item.id}-${item.customization}`} className={styles.reviewItem}>
+                        <img src={item.images?.[0]} alt={item.name} className={styles.reviewItemImg} />
+                        <div className={styles.reviewItemInfo}>
+                          <span className={styles.reviewItemName}>{item.name}</span>
+                          {item.customization && (
+                            <span className={styles.reviewItemCustom}>✏️ {item.customization}</span>
+                          )}
+                          <span className={styles.reviewItemQty}>Qty: {item.quantity}</span>
+                        </div>
+                        <span className={styles.reviewItemPrice}>
+                          Rs. {(item.price * item.quantity).toLocaleString()}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </Section>
+
+                {/* Totals recap */}
+                <div className={styles.reviewTotals}>
+                  <div className={styles.reviewTotalsRow}>
+                    <span>Subtotal</span><span>Rs. {cartSubtotal.toLocaleString()}</span>
+                  </div>
+                  {couponDiscount > 0 && (
+                    <div className={`${styles.reviewTotalsRow} ${styles.reviewDiscount}`}>
+                      <span>Discount</span><span>− Rs. {couponDiscount.toLocaleString()}</span>
+                    </div>
+                  )}
+                  <div className={styles.reviewTotalsRow}>
+                    <span>Delivery</span>
+                    <span>{deliveryFee === 0 ? 'Free 🎉' : `Rs. ${deliveryFee}`}</span>
+                  </div>
+                  <div className={`${styles.reviewTotalsRow} ${styles.reviewTotal}`}>
+                    <span>Total</span>
+                    <span>Rs. {finalTotal.toLocaleString()}</span>
+                  </div>
                 </div>
 
-                <form onSubmit={handleSubmit}>
-                  <div className={styles.actionRow}>
-                    <Button type="button" variant="ghost" size="lg" onClick={() => setStep(0)}>
-                      ← Back
-                    </Button>
-                    <Button type="submit" variant="primary" size="lg" style={{ flex: 1 }}>
-                      🎉 Place Order
-                    </Button>
-                  </div>
-                </form>
-              </div>
+                {/* Place order */}
+                <div className={styles.stepActions}>
+                  <button className={styles.backBtn} onClick={handleBack} disabled={placing}>
+                    ← Back
+                  </button>
+                  <button
+                    className={`${styles.placeBtn} ${placing ? styles.placeBtnLoading : ''}`}
+                    onClick={handlePlaceOrder}
+                    disabled={placing}
+                  >
+                    {placing
+                      ? <><span className={styles.spinner} />Placing Order…</>
+                      : '🎉 Place Order'
+                    }
+                  </button>
+                </div>
+              </>
             )}
           </div>
 
-          {/* Summary Sidebar */}
-          <aside className={styles.summary}>
-            <h2 className={styles.summaryTitle}>Order Summary</h2>
-            {cartItems.map(item => (
-              <div key={`${item.id}-${item.customization}`} className={styles.summaryItem}>
-                <span className={styles.summaryItemName}>{item.name} × {item.quantity}</span>
-                <span>Rs. {(item.price * item.quantity).toLocaleString()}</span>
-              </div>
-            ))}
-            <div className={styles.summaryDivider} />
-            <div className={styles.summaryRow}>
-              <span>Subtotal</span>
-              <span>Rs. {cartTotal.toLocaleString()}</span>
-            </div>
-            <div className={styles.summaryRow}>
-              <span>Shipping</span>
-              <span className={shipping === 0 ? styles.freeShipping : ''}>
-                {shipping === 0 ? 'Free 🎉' : `Rs. ${shipping}`}
-              </span>
-            </div>
-            <div className={`${styles.summaryRow} ${styles.totalRow}`}>
-              <span>Total</span>
-              <span>Rs. {total.toLocaleString()}</span>
-            </div>
-          </aside>
+          {/* ── RIGHT: Order Summary ── */}
+          <OrderSummary
+            cartItems={cartItems}
+            cartSubtotal={cartSubtotal}
+            couponDiscount={couponDiscount}
+            appliedCoupon={appliedCoupon}
+            deliveryFee={deliveryFee}
+            cartTotal={cartTotal}
+          />
         </div>
       </div>
     </main>
