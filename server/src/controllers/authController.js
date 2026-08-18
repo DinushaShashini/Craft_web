@@ -24,8 +24,8 @@ const register = asyncHandler(async (req, res) => {
     throw new AppError('Name, email, and password are required.', 400);
   }
 
-  if (password.length < 6) {
-    throw new AppError('Password must be at least 6 characters.', 400);
+  if (password.length < 8) {
+    throw new AppError('Password must be at least 8 characters.', 400);
   }
 
   const existing = await User.findOne({ email: email.toLowerCase() });
@@ -38,7 +38,7 @@ const register = asyncHandler(async (req, res) => {
     email,
     password,
     phone,
-    role: 'user',
+    role: 'customer',
   });
 
   const token = generateToken(user._id);
@@ -61,6 +61,10 @@ const login = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
   if (!user || !(await user.comparePassword(password))) {
     throw new AppError('Invalid email or password.', 401);
+  }
+
+  if (user.isActive === false) {
+    throw new AppError('This account has been deactivated. Please contact support.', 403);
   }
 
   const token = generateToken(user._id);

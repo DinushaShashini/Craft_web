@@ -1,8 +1,18 @@
-const Order = require('../models/Order');
-const Product = require('../models/Product');
-const AppError = require('../utils/AppError');
-const asyncHandler = require('../utils/asyncHandler');
+const Order     = require('../models/Order');
+const Product   = require('../models/Product');
+const AppError  = require('../utils/AppError');
+const asyncHandler       = require('../utils/asyncHandler');
 const generateOrderNumber = require('../utils/generateOrderNumber');
+
+// ── Status → tracking stage mapping ───────────────────────────
+const STATUS_TO_STAGE = {
+  pending:    0, // Order Placed
+  confirmed:  1, // Payment Confirmed
+  processing: 2, // Preparing
+  shipped:    3, // Dispatched
+  delivered:  5, // Delivered
+};
+// 'out_for_delivery' could be added later as stage 4
 
 const createOrder = asyncHandler(async (req, res) => {
   const {
@@ -183,9 +193,66 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
   });
 });
 
+const trackOrder = asyncHandler(async (req, res) => {
+  const { orderNumber } = req.params;
+  const { phone }       = req.query;
+
+  const order = await Order.findOne({ orderNumber: orderNumber.toUpperCase() });
+
+  if (!order) {
+    throw new AppError('Order not found. Please check your order number.', 404);
+  }
+
+  // Public callers must supply phone for basic verification
+  if (!phone || order.phone.replace(/\s/g, '') !== phone.replace(/\s/g, '')) {
+    throw new AppError('Phone number does not match. Please try again.', 403);
+  }
+
+  const stageIdx = STATUS_TO_STAGE[order.status] ?? 0;
+
+  // Estimated delivery based on stage and delivery type
+  const daysLeft = order.deliveryType === 'express'
+    ? Math.max(0, 2 - stageIdx)
+    : Math.max(0, 5 - stageIdx);
+
+  const estimatedDate = new Date(order.placedAt);
+  estimatedDate.setDate(estimatedDate.getDate() + daysLeft);
+
+  res.json({
+    success: true,
+    data: {
+      orderNumber:   order.orderNumber,
+      status:        order.status,
+      stageIdx,
+      customerName:  order.customerName,
+      deliveryType:  order.deliveryType,
+      paymentMethod: order.paymentMethod,
+      placedAt:      order.placedAt,
+      estimatedDelivery: order.status === 'delivered'
+        ? order.updatedAt
+        : estimatedDate,
+      itemCount:   order.items.length,
+      items:       order.items.map((i) => ({
+        name:          i.name,
+        quantity:      i.quantity,
+        price:         i.price,
+        customization: i.customization,
+      })),
+      subtotal:      order.subtotal,
+      couponDiscount:order.couponDiscount,
+      deliveryFee:   order.deliveryFee,
+      total:         order.total,
+      city:          order.city,
+      province:      order.province,
+    },
+  });
+});
+
 module.exports = {
   createOrder,
   getOrderById,
   getOrders,
   updateOrderStatus,
+  trackOrder,
 };
+
