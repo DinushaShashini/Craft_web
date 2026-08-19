@@ -1,0 +1,29 @@
+.addBtn { padding: 0.6rem 1.3rem; background: var(--accent-rose); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: background var(--transition-fast); }
+.addBtn:hover { background: var(--accent-rose-dark); }
+
+.iconBadge { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: var(--radius-sm); font-size: 1.1rem; }
+.count { display: inline-block; background: #f0f2f5; color: var(--text-medium); padding: 2px 10px; border-radius: 99px; font-size: 0.8rem; font-weight: 600; }
+
+.actions { display: flex; gap: 0.4rem; }
+.btnEdit, .btnDelete { padding: 4px 11px; border-radius: var(--radius-sm); font-size: 0.78rem; font-weight: 600; cursor: pointer; border: 1px solid; transition: all var(--transition-fast); }
+.btnEdit   { background: #fef9eb; color: #b87c0a; border-color: #e8d48a; }
+.btnDelete { background: #ffeef0; color: #c0392b; border-color: #f5c6cb; }
+.btnEdit:hover   { background: #fef0cc; }
+.btnDelete:hover { background: #ffd9dc; }
+
+.form { display: flex; flex-direction: column; gap: 0.75rem; }
+.row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.6rem; }
+.label { font-size: 0.82rem; font-weight: 600; color: var(--text-medium); }
+.input, .textarea { padding: 0.5rem 0.75rem; border: 1px solid #dde2ea; border-radius: var(--radius-sm); font-size: 0.875rem; font-family: inherit; color: var(--text-dark); background: #fafbfc; outline: none; width: 100%; }
+.input:focus, .textarea:focus { border-color: var(--accent-rose-light); box-shadow: 0 0 0 3px rgba(201,120,90,0.1); background: #fff; }
+.textarea { resize: vertical; min-height: 60px; }
+.colorInput { height: 38px; padding: 2px 4px; border: 1px solid #dde2ea; border-radius: var(--radius-sm); background: #fafbfc; cursor: pointer; width: 100%; }
+.formActions { display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; }
+.btnCancel { padding: 0.5rem 1.1rem; border: 1px solid #dde2ea; background: #fff; border-radius: var(--radius-sm); font-size: 0.875rem; font-weight: 600; cursor: pointer; color: var(--text-medium); }
+.btnCancel:hover { background: #f5f6f8; }
+.btnSave { padding: 0.5rem 1.3rem; background: var(--accent-rose); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 0.875rem; font-weight: 600; cursor: pointer; }
+.btnSave:hover { background: var(--accent-rose-dark); }
+.btnDanger { padding: 0.5rem 1.3rem; background: #c0392b; color: #fff; border: none; border-radius: var(--radius-sm); font-size: 0.875rem; font-weight: 600; cursor: pointer; }
+.btnDanger:hover { background: #a93226; }
+.deleteBody { display: flex; flex-direction: column; gap: 1rem; }
+.deleteBody p { font-size: 0.9rem; color: var(--text-medium); line-height: 1.6; }

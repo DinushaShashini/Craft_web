@@ -3,15 +3,15 @@ const AppError = require('../utils/AppError');
 const asyncHandler = require('../utils/asyncHandler');
 
 const getCategories = asyncHandler(async (req, res) => {
-  // Populate the virtual 'count' field (product count per category)
-  const categories = await Category.find()
-    .sort({ name: 1 })
-    .populate('count');
+  // Populate the 'productCount' virtual (defined in Category model)
+  const categories = await Category.find({ isActive: true })
+    .sort({ sortOrder: 1, name: 1 })
+    .populate('productCount');
 
   const data = categories.map((cat) => {
     const doc = cat.toObject({ virtuals: true });
-    doc.id = doc.slug;
-    doc.count = typeof cat.count === 'number' ? cat.count : 0;
+    doc.id    = doc.slug;
+    doc.count = typeof cat.productCount === 'number' ? cat.productCount : 0;
     return doc;
   });
 
