@@ -1,0 +1,5 @@
+.payId    { font-family: monospace; font-size: 0.78rem; color: var(--text-muted); }
+.orderNum { font-family: monospace; font-size: 0.78rem; background: #f5f6f8; padding: 2px 6px; border-radius: 4px; color: var(--text-medium); }
+.amount   { color: var(--accent-sage-dark); font-size: 0.9rem; }
+.txnId    { font-family: monospace; font-size: 0.78rem; color: var(--text-medium); }
+.na       { color: var(--text-light); font-style: italic; font-size: 0.82rem; }

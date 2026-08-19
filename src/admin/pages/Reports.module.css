@@ -1,0 +1,68 @@
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.summCard {
+  background: #fff;
+  border-radius: var(--radius-md);
+  border: 1px solid #eef0f4;
+  box-shadow: var(--shadow-sm);
+  padding: 1.25rem 1.4rem;
+  text-align: center;
+}
+
+.summVal { font-size: 1.5rem; font-weight: 800; color: var(--text-dark); line-height: 1; }
+.summLabel { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+@media (max-width: 860px) { .row { grid-template-columns: 1fr; } }
+
+.card {
+  background: #fff;
+  border-radius: var(--radius-md);
+  border: 1px solid #eef0f4;
+  box-shadow: var(--shadow-sm);
+  padding: 1.4rem 1.5rem;
+}
+
+.cardTitle { font-family: var(--font-heading); font-size: 1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 1.2rem; }
+
+/* Bar chart vertical */
+.barChart { display: flex; align-items: flex-end; gap: 0.6rem; height: 220px; padding-top: 1.5rem; }
+.barGroup { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.barLabel2 { font-size: 0.68rem; color: var(--text-muted); }
+.barWrap { flex: 1; display: flex; align-items: flex-end; width: 100%; justify-content: center; }
+.bar { width: 65%; background: linear-gradient(180deg, var(--accent-rose), var(--accent-gold)); border-radius: 4px 4px 0 0; min-height: 4px; }
+.barMonth { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
+.barOrders { font-size: 0.68rem; color: var(--text-light); }
+
+/* Status bars */
+.statList { display: flex; flex-direction: column; gap: 0.85rem; }
+.statRow { display: flex; align-items: center; gap: 0.75rem; }
+.statLabel { width: 90px; font-size: 0.82rem; color: var(--text-medium); flex-shrink: 0; }
+.statBar { flex: 1; height: 10px; background: #f0f2f5; border-radius: 99px; overflow: hidden; }
+.statFill { height: 100%; background: linear-gradient(90deg, var(--accent-rose), var(--accent-gold)); border-radius: 99px; transition: width var(--transition-slow); }
+.statCount { width: 28px; text-align: right; font-size: 0.82rem; font-weight: 700; color: var(--text-dark); }
+
+/* Horizontal bars */
+.barChartH { display: flex; flex-direction: column; gap: 0.8rem; }
+.barH { display: flex; align-items: center; gap: 0.75rem; }
+.barHLabel { width: 160px; font-size: 0.78rem; color: var(--text-medium); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
+.barHWrap { flex: 1; height: 12px; background: #f0f2f5; border-radius: 99px; overflow: hidden; }
+.barHFill { height: 100%; background: linear-gradient(90deg, var(--accent-sage), var(--accent-sage-dark)); border-radius: 99px; }
+.barHVal { width: 24px; font-size: 0.82rem; font-weight: 700; color: var(--text-dark); }
+
+/* Payment methods */
+.methodList { display: flex; flex-direction: column; gap: 1rem; }
+.methodRow { display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1rem; background: #f8f9fc; border-radius: var(--radius-sm); border: 1px solid #eef0f4; }
+.methodInfo { display: flex; flex-direction: column; gap: 2px; }
+.methodLabel { font-weight: 600; font-size: 0.875rem; color: var(--text-dark); }
+.methodCount { font-size: 0.76rem; color: var(--text-muted); }
+.methodTotal { font-weight: 700; font-size: 0.9rem; color: var(--accent-sage-dark); }

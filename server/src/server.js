@@ -3,8 +3,8 @@ const connectDB = require('./config/db');
 const env = require('./config/env');
 
 async function start() {
-  await connectDB();
-
+  await connectDB();//connect to mongodb
+//start express server
   app.listen(env.port, () => {
     console.log(`IMO Craft API listening on port ${env.port} (${env.nodeEnv})`);
   });
